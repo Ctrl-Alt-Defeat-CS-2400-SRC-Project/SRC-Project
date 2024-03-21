@@ -2,7 +2,7 @@
    An interface that describes the operations of a bag of objects.
    @author Hasti Abbasi Kenarsari
 */
-public interface ListInterface<T> {
+public interface BagInterface<T> {
 
     /**
      * Gets the current number of entries in the bag
