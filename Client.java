@@ -6,7 +6,7 @@ public class Client {
     private String email;
     private int age;
 
-    private Produce produce[];
+    private Produce produceNeeded[];
     private int produceCount;
 
     // name, age, and at least one contact method are required, null will be passed in for optional fields
