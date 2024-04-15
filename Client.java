@@ -6,9 +6,6 @@ public class Client {
     private String email;
     private int age;
 
-    private Produce produceNeeded[];
-    private int produceCount;
-
     // name, age, and at least one contact method are required, null will be passed in for optional fields
     public Client(String name, String address, String phone, String email, int age) {
         this.name = name;
@@ -18,4 +15,35 @@ public class Client {
         this.age = age;
     }
 
+    public Client(String name, String address, String phone, int age) {
+        this(name, address, phone, null, age);
+    }
+
+    public Client(String name, String phone, int age) {
+        this(name, null, phone, null, age);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String toString() {
+        return "Name: " + name + "\nAddress: " + address + "\nPhone: " + phone + "\nEmail: " + email + "\nAge: " + age;
+    }
 }
