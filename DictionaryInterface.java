@@ -50,7 +50,7 @@ public interface DictionaryInterface<K, V> {
      * 
      * @return An Iterator that provides sequential access to the search keys in the dictionary
      */
-    public Iterator<V> getKeyIterator();
+    public Iterator<K> getKeyIterator();
 
     /**
      * Creates an Iterator that traverses all values in this dictionary.
