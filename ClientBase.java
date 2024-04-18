@@ -9,6 +9,7 @@ import java.util.Arrays;
  */
 public class ClientBase {
     private SortedLinkedDictionary<Client, Produce[]> clientBase = new SortedLinkedDictionary<Client, Produce[]>();
+    private Inventory inventory = new Inventory();
 
     /**
      * Adds a new client to the client base with a placeholder for orders
@@ -46,7 +47,7 @@ public class ClientBase {
             System.out.println("Client not found\n");
             return success;
         }
-        if (!Inventory.inStock(produce, quantity)) { // need to be added to inventory
+        if (!inventory.inStock(produce, quantity)) { // need to be added to inventory
             System.out.println("Not enough produce in stock\n");
             return success;
         }
@@ -55,7 +56,7 @@ public class ClientBase {
         if (orders == null) {
             Produce[] newOrders = new Produce[quantity];
             for (int i = 0; i < quantity; i++)
-                newOrders[i] = Inventory.removeProduce(produce, 1); // need to be added to inventory
+                newOrders[i] = inventory.removeProduce(produce, 1); // need to be added to inventory
             clientBase.add(client, newOrders);
             success = true;
         } else {
@@ -64,7 +65,7 @@ public class ClientBase {
                 newOrders[i] = orders[i];
             }
             for (int i = orders.length; i < newOrders.length; i++)
-                newOrders[i] = Inventory.removeProduce(produce, 1); // need to be added to inventory
+                newOrders[i] = inventory.removeProduce(produce, 1); // need to be added to inventory
             clientBase.add(client, newOrders);
             success = true;
         }
@@ -231,7 +232,7 @@ public class ClientBase {
     public boolean cancelOrder(String userName, String produceName, int quantity) {
         boolean cancelled = removeOrder(userName, produceName, quantity);
         if (cancelled)
-            Inventory.addProduce(getProduce(userName, produceName), quantity);
+            inventory.addProduce(getProduce(userName, produceName), quantity);
         else
             System.out.println("Order not cancelled.\n");
         return cancelled;
