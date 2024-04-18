@@ -25,6 +25,13 @@ public class ClientBase {
      */
     public boolean addClient(String name, String address, String phone, String email, int age) {
         boolean success = false;
+        if (name == null || age < 0) {
+            System.out.println("Invalid input for name or age");
+            return success;
+        } else if (phone == null && email == null) {
+            System.out.println("Phone or email required");
+            return success;
+        }
         Client newClient = new Client(name, address, phone, email, age);
         clientBase.add(newClient, placeholder);
         if (clientBase.contains(newClient)) {

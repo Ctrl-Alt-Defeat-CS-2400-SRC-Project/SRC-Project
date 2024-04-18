@@ -27,64 +27,6 @@ public class Client implements Comparable<Client> {
         this.age = age;
     }
 
-    /**
-     * Alternate constructor that does not require an address
-     * 
-     * @param name the user name of the client, is required
-     * @param age the age of the client, is required
-     * @param phone the phone number of the client, either phone or email is required
-     * @param email the email of the client, either phone or email is required
-     *  */
-    public Client(String name, String phone, int age, String email) {
-        this(name, null, phone, email, age);
-    }
-
-    /**
-     * Alternate constructor that does not require an phone
-     * 
-     * @param name the user name of the client, is required
-     * @param age the age of the client, is required
-     * @param address the address of the client, is optional
-     * @param email the phone number of the client, either phone or email is required
-     *  */
-    public Client(String name, String address, String email, int age) {
-        this(name, address, null, email, age);
-    }
-
-    /**
-     * Alternate constructor that does not require an email
-     * 
-     * @param name the user name of the client, is required
-     * @param age the age of the client, is required
-     * @param address the address of the client, is optional
-     * @param phone the phone number of the client, either phone or email is required
-     *  */
-    public Client(String name, int age, String address, String phone) {
-        this(name, address, phone, null, age);
-    }
-
-    /**
-     * Alternate constructor that does not require an address or email
-     * 
-     * @param name the user name of the client, is required
-     * @param age the age of the client, is required
-     * @param phone the phone number of the client, either phone or email is required
-     *  */
-    public Client(String name, String phone, int age) {
-        this(name, null, phone, null, age);
-    }
-
-    /**
-     * Alternate constructor that does not require an address or phone number
-     * 
-     * @param name the user name of the client, is required
-     * @param age the age of the client, is required
-     * @param email the email of the client, either phone or email is required
-     *  */
-    public Client(String name, int age, String email) {
-        this(name, null, null, email, age);
-    }
-
     @Override
     public int compareTo(Client other) {
         return userName.compareTo(other.getName());

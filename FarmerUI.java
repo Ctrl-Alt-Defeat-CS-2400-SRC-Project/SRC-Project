@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 /**
  * A terminal based user interface for the farmer/owner to manage Inventory, Orders, and Clients.
- * @author 
+ * @author Ryan Wei
  */
 public class FarmerUI {
     private static final String WELCOME_MESSAGE = "Welcome!";
@@ -26,11 +26,13 @@ public class FarmerUI {
     private static final String CLIENTS_MENU = "Please select an option:\n" +
             "1. Add Client\n" +
             "2. Remove Client\n" +
-            "3. View Clients\n" +
-            "4. Back";
+            "3. View All Clients\n" +
+            "4. View Specific Client\n" +
+            "5. Back";
     private static final String EXIT_MESSAGE = "Thank you for using our software!";
 
     private static ClientBase clientBase = new ClientBase();
+    private static Inventory inventory = new Inventory();
     private static Scanner scanner = new Scanner(System.in);
 
     /**
@@ -71,7 +73,38 @@ public class FarmerUI {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-
+                    System.out.println("Enter produce name to add to inventory: ");
+                    String produceName = scanner.nextLine();
+                    if(!inventory.contains(produceName)) {
+                        System.out.println("New produce, enter season: ");
+                        String season = scanner.nextLine();
+                        if(season.equals("")) {
+                            System.out.println("Season required. Please try again. Press enter to continue.");
+                            scanner.nextLine();
+                            break;
+                        }
+                        System.out.println("Enter quantity of produce to add to inventory: ");
+                        int quantity = scanner.nextInt();
+                        scanner.nextLine();
+                        if(inventory.addProduce(new Produce(produceName, season), quantity)) {
+                            System.out.println("Produce added successfully. Press enter to continue.");
+                            scanner.nextLine();
+                        } else {
+                            System.out.println("Produce not added. Please try again. Press enter to continue.");
+                            scanner.nextLine();
+                        }
+                    } else {
+                        System.out.println("Enter quantity of produce to add to inventory: ");
+                        int quantity = scanner.nextInt();
+                        scanner.nextLine();
+                        if(inventory.addProduce(inventory.getProduce(produceName), quantity)) {
+                            System.out.println("Produce added successfully. Press enter to continue.");
+                            scanner.nextLine();
+                        } else {
+                            System.out.println("Produce not added. Please try again. Press enter to continue.");
+                            scanner.nextLine();
+                        }
+                    }
                     break;
                 case 2:
 
@@ -120,7 +153,7 @@ public class FarmerUI {
                     System.out.println("Enter quantity of produce to mark as done:");
                     int quantityDone = scanner.nextInt();
                     scanner.nextLine();
-                    if(clientBase.removeOrder(clientNameDone, produceNameDone, quantityDone) != null) {
+                    if(clientBase.removeOrder(clientNameDone, produceNameDone, quantityDone)) {
                         System.out.println("Order marked as done. Press enter to continue.");
                         scanner.nextLine();
                     } else {
@@ -183,13 +216,13 @@ public class FarmerUI {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    System.out.println("Enter client name:");
+                    System.out.println("Enter client name(required):");
                     String name = scanner.nextLine();
-                    System.out.println("Enter client address:");
+                    System.out.println("Enter client address(not required):");
                     String address = scanner.nextLine();
-                    System.out.println("Enter client phone number:");
+                    System.out.println("Enter client phone number(either email or phone is required):");
                     String phone = scanner.nextLine();
-                    System.out.println("Enter client email:");
+                    System.out.println("Enter client email(either email or phone is required):");
                     String email = scanner.nextLine();
                     System.out.println("Enter client age:");
                     int age = scanner.nextInt();
@@ -218,6 +251,13 @@ public class FarmerUI {
                     scanner.nextLine();
                     break;
                 case 4:
+                    System.out.println("Enter client name: ");
+                    String clientNameView = scanner.nextLine();
+                    System.out.println(clientBase.getClient(clientNameView));
+                    System.out.println("press enter to continue");
+                    scanner.nextLine();
+                    break;
+                case 5:
                     done = true;
                     break;
                 default:
