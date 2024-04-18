@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-public class Produce {
+public class Produce implements Comparable<Produce> {
     // produce object
     private String name; // name of the produce
     private String type; // fruit, vegetable, etc.
@@ -32,6 +32,11 @@ public class Produce {
         } else {
             return "winter";
         }
+    }
+
+    @Override
+    public int compareTo(Produce other) {
+        return this.name.compareTo(other.getName());
     }
 
     //getters and setters

@@ -3,7 +3,7 @@
  * @author Ryan Wei
  */
 
-public class Client {
+public class Client implements Comparable<Client> {
     private String userName; //user name for anonymity, as those who are in need may not want to share their real name
     private String address;
     private String phone;
@@ -85,11 +85,16 @@ public class Client {
         this(name, null, null, email, age);
     }
 
+    @Override
+    public int compareTo(Client other) {
+        return userName.compareTo(other.getName());
+    }
+
     /**
      * retrieves the user name of the client
      * @return userName
      */
-    public String getUserName() {
+    public String getName() {
         return userName;
     }
 

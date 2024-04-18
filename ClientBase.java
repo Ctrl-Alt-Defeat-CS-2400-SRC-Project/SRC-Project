@@ -1,249 +1,266 @@
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.Arrays;
 
 /**
- * A ClientBase class that implements the DictionaryInterface using a sorted linked dictionary. 
- * The dictionary is sorted and has distinct search keys.
- * Search keys and associated values are not null.
+ * Uses the sorted linked dictionary to create and maintain a list of clients and their orders. 
+ * The client base is used to add, remove, and get clients and their orders.
  * 
  * @author Ryan Wei
  */
-public class ClientBase<K extends Comparable<? super K>, V> implements DictionaryInterface<K, V> {
-    private Node firstNode;
-    private int numberOfEntries;
+public class ClientBase {
+    private SortedLinkedDictionary<Client, Produce[]> clientBase = new SortedLinkedDictionary<Client, Produce[]>();
 
     /**
-     * Default constructor for the ClientBase class
+     * Adds a new client to the client base with a placeholder for orders
+     * 
+     * @param name    the name of the client
+     * @param address the address of the client, can be null
+     * @param phone   the phone number of the client, can be null
+     * @param email   the email of the client, can be null
+     * @param age     the age of the client
+     * @return true if the client was added successfully, false otherwise
      */
-    public ClientBase() {
-        initializeDataFields();
+    public boolean addClient(String name, String address, String phone, String email, int age) {
+        boolean success = false;
+        Produce placeholder[] = null;
+        Client newClient = new Client(name, address, phone, email, age);
+        clientBase.add(newClient, placeholder);
+        if (clientBase.contains(newClient)) {
+            success = true;
+        }
+        return success;
     }
 
     /**
-     * Adds a new entry to this dictionary. 
-     * If the given key already exists in the dictionary, replaces the corresponding value.
-     * @param key An object that serves as the key of the new entry.
-     * @param value An object that is the desired value of the new entry.
-     * @return Either null if the new entry was added to the dictionary or the value that was associated with key if that value was replaced.
+     * adds an order to the client's list of orders, removes the same amount from the inventory
+     * 
+     * @param userName the user name of the client to add to
+     * @param produce the produce to add to the order
+     * @param quantity the quantity of the produce to add to the order
+     * @return true if the produce was added successfully, false otherwise
      */
-    public V add(K key, V value) {
-        V result = null;
-        if ((key == null) || (value == null)) {
-            throw new IllegalArgumentException("Cannot add null to a dictionary.");
+    public boolean addProduce(String userName, String produce, int quantity) {
+        boolean success = false;
+        Client client = getClient(userName);
+        if (client == null) {
+            System.out.println("Client not found\n");
+            return success;
+        }
+        if (!Inventory.inStock(produce, quantity)) { // need to be added to inventory
+            System.out.println("Not enough produce in stock\n");
+            return success;
+        }
+
+        Produce[] orders = clientBase.getValue(client);
+        if (orders == null) {
+            Produce[] newOrders = new Produce[quantity];
+            for (int i = 0; i < quantity; i++)
+                newOrders[i] = Inventory.removeProduce(produce, 1); // need to be added to inventory
+            clientBase.add(client, newOrders);
+            success = true;
         } else {
-            Node currentNode = firstNode;
-            Node nodeBefore = null;
-            while ((currentNode != null) && (key.compareTo(currentNode.getKey()) > 0)) {
-                nodeBefore = currentNode;
-                currentNode = currentNode.getNextNode();
+            Produce[] newOrders = new Produce[orders.length + quantity];
+            for (int i = 0; i < orders.length; i++) {
+                newOrders[i] = orders[i];
             }
-            if ((currentNode != null) && key.equals(currentNode.getKey())) {
-                result = currentNode.getValue();
-                currentNode.setValue(value);
-            } else {
-                Node newNode = new Node(key, value);
-                if (nodeBefore == null) {
-                    newNode.setNextNode(firstNode);
-                    firstNode = newNode;
-                } else {
-                    newNode.setNextNode(currentNode);
-                    nodeBefore.setNextNode(newNode);
+            for (int i = orders.length; i < newOrders.length; i++)
+                newOrders[i] = Inventory.removeProduce(produce, 1); // need to be added to inventory
+            clientBase.add(client, newOrders);
+            success = true;
+        }
+        return success;
+    }
+
+    /**
+     * Gets the produce object from the client's list of orders
+     * 
+     * @param userName the user name of the client
+     * @param produceName the name of the produce
+     * @return the produce object if found, null otherwise
+     */
+    public Produce getProduce(String userName, String produceName) {
+        Client client = getClient(userName);
+        if (client == null) {
+            return null;
+        }
+        Produce[] orders = clientBase.getValue(client);
+        if (orders == null) {
+            return null;
+        }
+        for (int i = 0; i < orders.length; i++) {
+            if (orders[i].getName().equals(produceName)) {
+                return orders[i];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets the client object from the client base
+     * 
+     * @param userName the user name of the client
+     * @return the client object if found, null otherwise
+     */
+    public Client getClient(String userName) {
+        Iterator<Client> clientIterator = clientBase.getKeyIterator();
+        while (clientIterator.hasNext()) {
+            Client currentClient = clientIterator.next();
+            if (currentClient.getName().equals(userName)) {
+                return currentClient;
+            }
+        }
+        return null;
+    }
+
+    public Client[] getAllClients() {
+        Iterator<Client> clientIterator = clientBase.getKeyIterator();
+        Client[] allClients = new Client[clientBase.getSize()];
+        int i = 0;
+        while (clientIterator.hasNext()) {
+            allClients[i] = clientIterator.next();
+            i++;
+        }
+        return Arrays.copyOf(allClients, i);
+    }
+
+    /**
+     * Retrieves the orders of a client
+     * @param userName the user name of the client
+     * @return an array of produce objects if the client is found, null otherwise
+     */
+    public Produce[] getOrders(String userName) {
+        Client client = getClient(userName);
+        if (client == null) {
+            System.out.println("Client not found\n");
+            return null;
+        }
+        return Arrays.copyOf(clientBase.getValue(client), clientBase.getValue(client).length);
+    }
+
+    public Produce[][] getAllOrders() {
+        Iterator<Produce[]> ordersIterator = clientBase.getValueIterator();
+        Produce[][] allOrders = new Produce[clientBase.getSize()][];
+        int i = 0;
+        while (ordersIterator.hasNext()) {
+            Produce[] currentOrders = ordersIterator.next();
+            allOrders[i] = currentOrders;
+            i++;
+        }
+        return Arrays.copyOf(allOrders, i);
+    }
+
+    /**
+     * Removes a client from the client base
+     * 
+     * @param userName the user name of the client
+     * @return an array of produce objects if the client is found, null otherwise
+     */
+    public boolean removeClient(String userName) {
+        boolean removed = false;
+        Client client = getClient(userName);
+        if (client == null) {
+            System.out.println("Client not found\n");
+            return removed;
+        } else {
+            clientBase.remove(client);
+            removed = true;
+        }
+        return removed;
+    }
+
+    /**
+     * Removes an order from the client's list of orders
+     * 
+     * @param userName the user name of the client
+     * @param produce the produce to remove from the order
+     * @param quantity the quantity of the produce to remove from the order
+     * @return true if the produce was removed successfully, false otherwise
+     */
+    public Boolean removeOrder(String userName, String produce, int quantity) {
+        boolean removed = false;
+        int count = 0;
+        Client client = getClient(userName);
+        if (client == null) {
+            System.out.println("Client not found\n");
+            return removed;
+        }
+        Produce[] orders = clientBase.getValue(client);
+        if (orders == null) {
+            System.out.println("No orders found\n");
+            return removed;
+        }
+        if(checkQuantity(userName, produce) == 0) {
+            System.out.println("No orders found of that type found\n");
+            return removed;
+        } else if (checkQuantity(userName, produce) < quantity) {
+            System.out.println("Quantity entered exceeds amount ordered by client\n");
+            return removed;
+        } else if (checkQuantity(userName, produce) < 0 ) {
+            System.out.println("Error, either client not found or no orders found\n");
+            return removed;
+        }
+
+        for (int i = 0; i < orders.length; i++) {
+            if (orders[i].equals(getProduce(userName, produce)) && count < quantity) {
+                Produce[] newOrders = new Produce[orders.length - 1];
+                for (int j = 0; j < i; j++) {
+                    newOrders[j] = orders[j];
                 }
-                numberOfEntries++;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Removes a specific entry from this dictionary.
-     * @param key An object that serves as the key of the entry to be removed.
-     * @return Either the value that was removed and was associated with the key or null if no such object exists.
-     */
-    public V remove(K key) {
-        V result = null;
-        if (key != null) {
-            Node currentNode = firstNode;
-            Node nodeBefore = null;
-            while ((currentNode != null) && (key.compareTo(currentNode.getKey()) > 0)) {
-                nodeBefore = currentNode;
-                currentNode = currentNode.getNextNode();
-            }
-            if ((currentNode != null) && key.equals(currentNode.getKey())) {
-                Node nodeAfter = currentNode.getNextNode();
-                if (nodeBefore == null) {
-                    firstNode = nodeAfter;
-                } else {
-                    nodeBefore.setNextNode(nodeAfter);
+                for (int j = i + 1; j < orders.length; j++) {
+                    newOrders[j - 1] = orders[j];
                 }
-                result = currentNode.getValue();
-                numberOfEntries--;
+                clientBase.add(client, newOrders);
+                removed = true;
+                i--;
+                count++;
             }
         }
-        return result;
+        if(!removed)
+            System.out.println("Order not found\n");
+        return removed;
     }
 
     /**
-     * Retrieves the value associated with a given key.
-     * @param key An object that serves as the key of the entry to be retrieved.
-     * @return Either the value that is associated with the key or null if no such object exists.
+     * Cancels an order and adds the produce back to the inventory
+     * 
+     * @param userName the user name of the client
+     * @param produceName the name of the produce
+     * @param quantity the quantity of the produce to cancel
+     * @return true if the order was cancelled successfully, false otherwise
      */
-    public V getValue(K key) {
-        V result = null;
-        Node currentNode = firstNode;
-        while ((currentNode != null) && (key.compareTo(currentNode.getKey()) > 0)) {
-            currentNode = currentNode.getNextNode();
+    public boolean cancelOrder(String userName, String produceName, int quantity) {
+        boolean cancelled = removeOrder(userName, produceName, quantity);
+        if (cancelled)
+            Inventory.addProduce(getProduce(userName, produceName), quantity);
+        else
+            System.out.println("Order not cancelled.\n");
+        return cancelled;
+    }
+
+    /**
+     * Checks the quantity of a produce in a client's order
+     * 
+     * @param userName the user name of the client
+     * @param produceName the name of the produce
+     * @return the quantity of the produce in the order, -1 if the client or produce is not found
+     */
+    public int checkQuantity(String userName, String produceName) {
+        Client client = getClient(userName);
+        if (client == null) {
+            return -1;
         }
-        if ((currentNode != null) && key.equals(currentNode.getKey())) {
-            result = currentNode.getValue();
+        Produce[] orders = clientBase.getValue(client);
+        if (orders == null) {
+            return -1;
         }
-        return result;
-    }
-
-    /**
-     * Sees whether a specific entry is in this dictionary.
-     * @param key An object that serves as the key of the desired entry.
-     * @return True if key is associated with an entry in the dictionary, false if not.
-     */
-    public boolean contains(K key) {
-        return getValue(key) != null;
-    }
-
-    /**
-     * Creates an Iterator that traverses all search keys in this dictionary.
-     * @return An Iterator that provides sequential access to the search keys in the dictionary
-     */
-    public Iterator<K> getKeyIterator() {
-        return new KeyIterator();
-    }
-
-    /**
-     * Creates an Iterator that traverses all values in this dictionary.
-     * @return An Iterator that provides sequential access to the values in this dictionary.
-     */
-    public Iterator<V> getValueIterator() {
-        return new ValueIterator();
-    }
-
-    /**
-     * Sees whether this dictionary is empty.
-     * @return True if the dictionary is empty, false if not.
-     */
-    public boolean isEmpty() {
-        return numberOfEntries == 0;
-    }
-
-    /**
-     * Gets the size of this dictionary.
-     * @return The number of entries in this dictionary.
-     */
-    public int getSize() {
-        return numberOfEntries;
-    }
-
-    /**
-     * Removes all entries from this dictionary.
-     */
-    public void clear() {
-        initializeDataFields();
-    }
-
-    private class KeyIterator implements Iterator<K> {
-        private Node nextNode;
-
-        private KeyIterator() {
-            nextNode = firstNode;
-        }
-
-        public boolean hasNext() {
-            return nextNode != null;
-        }
-
-        public K next() {
-            K result;
-            if (hasNext()) {
-                result = nextNode.getKey();
-                nextNode = nextNode.getNextNode();
-            } else {
-                throw new NoSuchElementException();
+        int count = 0;
+        for (int i = 0; i < orders.length; i++) {
+            if (orders[i].getName().equals(produceName)) {
+                count++;
             }
-            return result;
         }
-
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
+        return count;
     }
 
-    private class ValueIterator implements Iterator<V> {
-        private Node nextNode;
-
-        private ValueIterator() {
-            nextNode = firstNode;
-        }
-
-        public boolean hasNext() {
-            return nextNode != null;
-        }
-
-        public V next() {
-            V result;
-            if (hasNext()) {
-                result = nextNode.getValue();
-                nextNode = nextNode.getNextNode();
-            } else {
-                throw new NoSuchElementException();
-            }
-            return result;
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    private void initializeDataFields() {
-        firstNode = null;
-        numberOfEntries = 0;
-    }
-
-    private class Node {
-        private K key;
-        private V value;
-        private Node next;
-
-        private Node(K searchKey, V dataValue) {
-            key = searchKey;
-            value = dataValue;
-            next = null;
-        }
-
-        private Node(K searchKey, V dataValue, Node nextNode) {
-            key = searchKey;
-            value = dataValue;
-            next = nextNode;
-        }
-
-        private K getKey() {
-            return key;
-        }
-
-        private V getValue() {
-            return value;
-        }
-
-        private void setValue(V newValue) {
-            value = newValue;
-        }
-
-        private Node getNextNode() {
-            return next;
-        }
-
-        private void setNextNode(Node nextNode) {
-            next = nextNode;
-        }
-
-    }
 
 }
