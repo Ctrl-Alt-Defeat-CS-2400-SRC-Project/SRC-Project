@@ -3,14 +3,12 @@ import java.time.LocalDate;
 public class Produce implements Comparable<Produce> {
     // produce object
     private String name; // name of the produce
-    private String type; // fruit, vegetable, etc.
     private boolean inSeason; // whether the produce is in season or not
     private String season; // season the produce is in
 
     // name, type, and season are required, inSeason will be calculated by Java
-    public Produce(String name, String type, String season) {
+    public Produce(String name, String season) {
         this.name = name;
-        this.type = type;
         this.season = season;
         this.inSeason = checkInSeason(season);
     }
@@ -42,10 +40,6 @@ public class Produce implements Comparable<Produce> {
     //getters and setters
     public String getName() {
         return name;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public boolean getInSeason() {

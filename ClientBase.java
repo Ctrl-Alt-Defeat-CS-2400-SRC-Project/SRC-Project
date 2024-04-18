@@ -10,6 +10,8 @@ import java.util.Arrays;
 public class ClientBase {
     private SortedLinkedDictionary<Client, Produce[]> clientBase = new SortedLinkedDictionary<Client, Produce[]>();
     private Inventory inventory = new Inventory();
+    private Produce tempProduce = new Produce("placeholder", "none");
+    private Produce[] placeholder = {tempProduce};
 
     /**
      * Adds a new client to the client base with a placeholder for orders
@@ -23,7 +25,6 @@ public class ClientBase {
      */
     public boolean addClient(String name, String address, String phone, String email, int age) {
         boolean success = false;
-        Produce placeholder[] = null;
         Client newClient = new Client(name, address, phone, email, age);
         clientBase.add(newClient, placeholder);
         if (clientBase.contains(newClient)) {
@@ -53,7 +54,7 @@ public class ClientBase {
         }
 
         Produce[] orders = clientBase.getValue(client);
-        if (orders == null) {
+        if (orders.equals(placeholder)) {
             Produce[] newOrders = new Produce[quantity];
             for (int i = 0; i < quantity; i++)
                 newOrders[i] = inventory.removeProduce(produce, 1); // need to be added to inventory
@@ -85,7 +86,7 @@ public class ClientBase {
             return null;
         }
         Produce[] orders = clientBase.getValue(client);
-        if (orders == null) {
+        if (orders == placeholder) {
             return null;
         }
         for (int i = 0; i < orders.length; i++) {
@@ -186,7 +187,7 @@ public class ClientBase {
             return removed;
         }
         Produce[] orders = clientBase.getValue(client);
-        if (orders == null) {
+        if (orders == placeholder) {
             System.out.println("No orders found\n");
             return removed;
         }

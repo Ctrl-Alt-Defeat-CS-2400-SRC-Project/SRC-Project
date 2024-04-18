@@ -30,19 +30,13 @@ public class FarmerUI {
             "4. Back";
     private static final String EXIT_MESSAGE = "Thank you for using our software!";
 
-    private ClientBase clientBase = new ClientBase();
-    private Scanner scanner = new Scanner(System.in);
+    private static ClientBase clientBase = new ClientBase();
+    private static Scanner scanner = new Scanner(System.in);
 
     /**
      * Starts the user interface
      */
-    public void start() {
-        welcome();
-    
-        System.out.println(EXIT_MESSAGE);
-    }
-
-    private void welcome() {
+    public static void start() {
         System.out.println(WELCOME_MESSAGE);
         boolean done = false;
         while (!done) {
@@ -66,9 +60,10 @@ public class FarmerUI {
                     System.out.println("Invalid choice, please try again.");
             }
         }
+        System.out.println(EXIT_MESSAGE);
     }
 
-    private void manageInventory() {
+    private static void manageInventory() {
         boolean done = false;
         while (!done) {
             System.out.println(INVENTORY_MENU);
@@ -92,87 +87,70 @@ public class FarmerUI {
                     System.out.println("Invalid choice, please try again.");
             }
         }
-        welcome();
     }
 
-    private void manageOrders() {
+    private static void manageOrders() {
         boolean done = false;
         while (!done) {
             System.out.println(ORDERS_MENU);
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
-                case 1:
-                    Boolean case1Done = false;
-                    while(!case1Done) {                    
-                        System.out.println("Enter client name to add orders to:");
-                        String clientName = scanner.nextLine();
-                        System.out.println("Enter produce name to add to order:");
-                        String produceName = scanner.nextLine();
-                        System.out.println("Enter quantity of produce to add to order:");
-                        int quantity = scanner.nextInt();
+                case 1:                 
+                    System.out.println("Enter client name to add orders to:");
+                    String clientName = scanner.nextLine();
+                    System.out.println("Enter produce name to add to order:");
+                    String produceName = scanner.nextLine();
+                    System.out.println("Enter quantity of produce to add to order:");
+                    int quantity = scanner.nextInt();
+                    scanner.nextLine();
+                    if(clientBase.addProduce(clientName, produceName, quantity)) {
+                        System.out.println("Order added successfully. press enter to continue.");
                         scanner.nextLine();
-                        if(clientBase.addProduce(clientName, produceName, quantity)) {
-                            System.out.println("Order added successfully. press enter to continue.");
-                            scanner.nextLine();
-                            case1Done = true;
-                        } else {
-                            System.out.println("Order not added. Please try again. Press enter to continue.");
-                            scanner.nextLine();
-                        }
+                    } else {
+                        System.out.println("Order not added. Please try again. Press enter to continue.");
+                        scanner.nextLine();
                     }
                     break;
                 case 2:
-                    Boolean case2Done = false;
-                    while(!case2Done) {
-                        System.out.println("Enter client name to mark order as done:");
-                        String clientNameDone = scanner.nextLine();
-                        System.out.println("Enter produce name to mark as done:");
-                        String produceNameDone = scanner.nextLine();
-                        System.out.println("Enter quantity of produce to mark as done:");
-                        int quantityDone = scanner.nextInt();
+                    System.out.println("Enter client name to mark order as done:");
+                    String clientNameDone = scanner.nextLine();
+                    System.out.println("Enter produce name to mark as done:");
+                    String produceNameDone = scanner.nextLine();
+                    System.out.println("Enter quantity of produce to mark as done:");
+                    int quantityDone = scanner.nextInt();
+                    scanner.nextLine();
+                    if(clientBase.removeOrder(clientNameDone, produceNameDone, quantityDone) != null) {
+                        System.out.println("Order marked as done. Press enter to continue.");
                         scanner.nextLine();
-                        if(clientBase.removeOrder(clientNameDone, produceNameDone, quantityDone) != null) {
-                            System.out.println("Order marked as done. Press enter to continue.");
-                            scanner.nextLine();
-                            case2Done = true;
-                        } else {
-                            System.out.println("Order not marked. Please try again. Press enter to continue.");
-                            scanner.nextLine();
-                        }
+                    } else {
+                        System.out.println("Order not marked. Please try again. Press enter to continue.");
+                        scanner.nextLine();
                     }
                     break;
                 case 3:
-                    boolean case3Done = false;
-                    while(!case3Done) {
-                        System.out.println("Enter client name to cancel order:");
-                        String clientNameCancel = scanner.nextLine();
-                        System.out.println("Enter produce name to cancel:");
-                        String produceNameCancel = scanner.nextLine();
-                        System.out.println("Enter quantity of produce to cancel:");
-                        int quantityCancel = scanner.nextInt();
+                    System.out.println("Enter client name to cancel order:");
+                    String clientNameCancel = scanner.nextLine();
+                    System.out.println("Enter produce name to cancel:");
+                    String produceNameCancel = scanner.nextLine();
+                    System.out.println("Enter quantity of produce to cancel:");
+                    int quantityCancel = scanner.nextInt();
+                    scanner.nextLine();
+                    if(clientBase.cancelOrder(clientNameCancel, produceNameCancel, quantityCancel)) {
+                        System.out.println("Order cancelled. Press enter to continue.");
                         scanner.nextLine();
-                        if(clientBase.cancelOrder(clientNameCancel, produceNameCancel, quantityCancel)) {
-                            System.out.println("Order cancelled. Press enter to continue.");
-                            scanner.nextLine();
-                            case3Done = true;
-                        } else {
-                            System.out.println("Order not cancelled. Please try again. Press enter to continue.");
-                            scanner.nextLine();
-                        }
+                    } else {
+                        System.out.println("Order not cancelled. Please try again. Press enter to continue.");
+                        scanner.nextLine();
                     }
                     break;
                 case 4:
-                    boolean case4Done = false;
-                    while(!case4Done) {
-                        System.out.println("Enter client name to view orders:\n");
-                        String clientNameView = scanner.nextLine();
-                        if(clientBase.getOrders(clientNameView) == null) {
-                            System.out.println("Please try again\n");
-                        } else {
-                            printOrders(clientBase.getOrders(clientNameView));
-                            case4Done = true;
-                        }
+                    System.out.println("Enter client name to view orders:\n");
+                    String clientNameView = scanner.nextLine();
+                    if(clientBase.getOrders(clientNameView) == null) {
+                        System.out.println("Please try again\n");
+                    } else {
+                        printOrders(clientBase.getOrders(clientNameView));
                     }
                     break;
                 case 5:
@@ -195,10 +173,9 @@ public class FarmerUI {
                     System.out.println("Invalid choice, please try again.");
             }
         }
-        welcome();
     }
 
-    public void manageClients() {
+    public static void manageClients() {
         boolean done = false;
         while (!done) {
             System.out.println(CLIENTS_MENU);
@@ -206,38 +183,30 @@ public class FarmerUI {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    boolean case1done = false;
-                    while(!case1done) {
-                        System.out.println("Enter client name:");
-                        String name = scanner.nextLine();
-                        System.out.println("Enter client address:");
-                        String address = scanner.nextLine();
-                        System.out.println("Enter client phone number:");
-                        String phone = scanner.nextLine();
-                        System.out.println("Enter client email:");
-                        String email = scanner.nextLine();
-                        System.out.println("Enter client age:");
-                        int age = scanner.nextInt();
-                        scanner.nextLine();
-                        if(clientBase.addClient(name, address, phone, email, age)) {
-                            System.out.println("Client added successfully.");
-                            case1done = true;
-                        } else {
-                            System.out.println("Client not added. Please try again.");
-                        }
+                    System.out.println("Enter client name:");
+                    String name = scanner.nextLine();
+                    System.out.println("Enter client address:");
+                    String address = scanner.nextLine();
+                    System.out.println("Enter client phone number:");
+                    String phone = scanner.nextLine();
+                    System.out.println("Enter client email:");
+                    String email = scanner.nextLine();
+                    System.out.println("Enter client age:");
+                    int age = scanner.nextInt();
+                    scanner.nextLine();
+                    if(clientBase.addClient(name, address, phone, email, age)) {
+                        System.out.println("Client added successfully.");
+                    } else {
+                        System.out.println("Client not added. Please try again.");
                     }
                     break;
                 case 2:
-                    boolean case2done = false;
-                    while(!case2done) {
-                        System.out.println("Enter client name to remove:");
-                        String clientName = scanner.nextLine();
-                        if(clientBase.removeClient(clientName)) {
-                            System.out.println("Client removed successfully.");
-                            case2done = true;
-                        } else {
-                            System.out.println("Client not removed. Please try again.");
-                        }
+                    System.out.println("Enter client name to remove:");
+                    String clientName = scanner.nextLine();
+                    if(clientBase.removeClient(clientName)) {
+                        System.out.println("Client removed successfully.");
+                    } else {
+                        System.out.println("Client not removed. Please try again.");
                     }
                     break;
                 case 3:
@@ -245,7 +214,7 @@ public class FarmerUI {
                     for (Client client : clients) {
                         System.out.println(client.getName());
                     }
-                    System.out.println("press enter to continue\n");
+                    System.out.println("press enter to continue");
                     scanner.nextLine();
                     break;
                 case 4:
@@ -255,14 +224,16 @@ public class FarmerUI {
                     System.out.println("Invalid choice, please try again.");
             }
         }
-        welcome();
     }
 
-    private void printOrders(Produce[] array) {
+    private static void printOrders(Produce[] array) {
         int i = 1;
-        Produce currentItem = null;
+        Produce currentItem = new Produce("placeholder", "none");
+        if(currentItem.equals(array[0])) {
+            System.out.println("No orders found");
+        }
         for (Produce item : array) {
-            if(currentItem != null && !currentItem.equals(item)) {
+            if(!currentItem.equals(new Produce("placeholder", "none")) && !currentItem.equals(item)) {
                 System.out.println(currentItem.getName() + " x" + i);
                 i = 1;
             } else {
