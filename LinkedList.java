@@ -1,3 +1,4 @@
+
 import java.util.Arrays;
 /**
    The inventory of products sold at the farm. 
