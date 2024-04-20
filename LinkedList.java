@@ -1,187 +1,161 @@
-import java.util.Arrays;
 /**
-   The inventory of products sold at the farm. 
+   A Linked implementation of a list of objects.
    @author Hasti Abbasi Kenarsari
 */
-public final class LinkedList<T> implements ListInterface<T> {
+public class LinkedList<T> implements ListInterface {
 
-    private T[] list;   
-	private int numberOfEntries;
-    private boolean integrityOK;
-	private static final int DEFAULT_CAPACITY = 25;
-	private static final int MAX_CAPACITY = 10000;
-    
+    private Node firstNode;
+    private int numberOfEntries;
 
-    /**
-    * Creates an list with default capacity.
-    */
     public LinkedList() {
-
-        this(DEFAULT_CAPACITY);
-
+        initializeDataFields();
     }
 
-    /**
-    * Creates an empty list with a given initial capacity. 
-    * 
-    * @param initialCapacity The capacity desired represented as an integer.
-    */
-    public LinkedList(int initialCapacity) {
+    public final void clear() {
+        initializeDataFields();
+    }
 
-        integrityOK = false;
-        
-        if (initialCapacity < DEFAULT_CAPACITY) {
-            initialCapacity = DEFAULT_CAPACITY;
-        } else {
-            checkCapacity(initialCapacity);
-        }
-       
-        @SuppressWarnings("unchecked")
-        T[] tempList = (T[])new Object[initialCapacity + 1];
-        list = tempList;
+    private void initializeDataFields() {
+        firstNode = null;
         numberOfEntries = 0;
-        integrityOK = true;
-        
     }
 
-    /**
-    * Creates a list containing given entries.  
-    * 
-    * @param contents An array of objects
-    */
-    public LinkedList(T[] contents) {
+    private Node getNodeAt(int givenPosition) {
 
+        // Assertion: (firstNode != null) && (1 <= givenPosition) && (givenPosition <= )numberOfNodes)
+
+        Node currentNode = firstNode;
+
+        for(int counter = 1; counter < givenPosition; counter++) {
+
+            currentNode = currentNode.getNextNode();
+
+        }
+
+        // Assertion: currentNode != null
+
+        return currentNode;
+    }
+
+    public void add(int givenPosition, T newEntry) {
+
+        if((givenPosition >= 1) && (givenPosition <= numberOfEntries + 1)) {
+            Node newNode = new Node(newEntry);
+
+            if(givenPosition == 1) {
+                newNode.setNextNode(firstNode);
+                firstNode = newNode;
+            } else {
+                Node nodeBefore = getNodeAt(givenPosition - 1);
+                Node nodeAfter = nodeBefore.getNextNode();
+
+                newNode.setNextNode(nodeAfter);
+                nodeBefore.setNextNode(newNode);
+            }
+
+            numberOfEntries++;
+
+        } else {
+            throw newIndexOutOfBoundsException("Illegal position given to add operation.");
+        }
 
     }
 
-    @Override
-    /** Adds a new entry to the end of this list.
-        Entries currently in the list are unaffected.
-        The list's size is increased by 1.
-        @param newEntry  The object to be added as a new entry. */
-    public void add(T newEntry) {
-
-    }
-   
-    @Override
-    /** Adds a new entry at a specified position within this list.
-        Entries originally at and above the specified position
-        are at the next higher position within the list.
-        The list's size is increased by 1.
-        @param newPosition  An integer that specifies the desired position of the new entry.
-        @param newEntry     The object to be added as a new entry.
-        @throws  IndexOutOfBoundsException if either newPosition < 1 or newPosition > getLength() + 1. */
-    public void add(int newPosition, T newEntry) {
-
-   }
-   
-    @Override
-    /** Removes the entry at a given position from this list.
-        Entries originally at positions higher than the given
-        position are at the next lower position within the list,
-        and the list's size is decreased by 1.
-        @param givenPosition  An integer that indicates the position of the entry to be removed.
-        @return  A reference to the removed entry.
-        @throws  IndexOutOfBoundsException if either givenPosition < 1 or givenPosition > getLength(). */
     public T remove(int givenPosition) {
-        return null;
-    }
-   
-   @Override
-   /** Removes all entries from this list. */
-   public void clear() {
 
-   }
-   
-    @Override
-    /** Replaces the entry at a given position in this list.
-       @param givenPosition  An integer that indicates the position of the entry to be replaced.
-       @param newEntry  The object that will replace the entry at the position givenPosition.
-       @return  The original entry that was replaced.
-       @throws  IndexOutOfBoundsException if either givenPosition < 1 or givenPosition > getLength(). */
+        T result = null;
+
+        if((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
+
+            // Assertion: !isEmpty()
+            if(givenPosition == 1) {
+                result = firstNode.getData();
+                firstNode = firstNode.getNextNode();
+            } else {
+                Node nodeBefore = getNodeAt(givenPosition - 1);
+                Node nodeToRemove = nodeBefore.getNextNode();
+                result = nodeToRemove.getData();
+                Node nodeAfter = nodeToRemove.getNextNode();
+
+                nodeBefore.setNextNode(nodeAfter);
+
+            }
+
+            numberOfEntries--;
+            return result;
+
+        } else {
+            throw new IndexOutOfBoundsException("Illegal position given to remove operation.");
+        }
+    }
+
     public T replace(int givenPosition, T newEntry) {
-        return null;
+
+        if((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
+
+            // Assertion: !isEmpty()
+            Node desiredNode = getNodeAt(givenPsition);
+            T originalEntry = desiredNode.getData();
+            desiredNode.setData(newEntry);
+            return originalEntry;
+
+        } else {
+            throw new IndexOutOfBoundsException("Illegal position given to replace operation.");
+        }
     }
-   
-    @Override
-    /** Retrieves the entry at a given position in this list.
-       @param givenPosition  An integer that indicates the position of the desired entry.
-       @return  A reference to the indicated entry.
-       @throws  IndexOutOfBoundsException if either givenPosition < 1 or givenPosition > getLength(). */
+
     public T getEntry(int givenPosition) {
-        return null;
+        if((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
+            // Assertion: !isEmpty()
+            return getNodeAt(givenPosition).getData();
+        } else {
+            throw new IndexOutOfBoundsException("Illegal position given to getEntry operation.");
+        }
     }
-   
-    @Override
-    /** Retrieves all entries that are in this list in the order in which
-       they occur in the list.
-       @return  A newly allocated array of all the entries in the list. If the list is empty, the returned array is empty. */
-    public T[] toArray() {
-        return null;
-    }
-   
-    @Override
-    /** Sees whether this list contains a given entry.
-       @param anEntry  The object that is the desired entry.
-       @return  True if the list contains anEntry, or false if not. */
+
     public boolean contains(T anEntry) {
-        return true;
+
+        boolean found = false;
+        Node currentNode = firstNode;
+
+        while(!found && (currentNode != null)) {
+            if(anEntry.equals(currentNode.getData())) {
+                found = true;
+            } else {
+                currentNode = currentNode.getNextNode();
+            }
+        }
+
+        return found;
     }
-   
-    @Override
-    /** Gets the length of this list.
-       @return  The integer number of entries currently in the list. */
-    public int getLength() {
-        return 0;
-    }
-       
-    @Override
-    /** Sees whether this list is empty.
-        @return  True if the list is empty, or false if not. */
+
     public boolean isEmpty() {
-        return true;
-    }
 
-    /** Doubles the capacity of the array list if it is full.
-    *  Precondition: checkIntegrity has been called.
-    */
-    private void ensureCapacity() {
-        int capacity = list.length - 1;
-
-        if (numberOfEntries >= capacity) {
-            int newCapacity = 2 * capacity;
-            checkCapacity(newCapacity); 
-            list = Arrays.copyOf(list, newCapacity + 1);
-        } 
-   } 
-
-    /**
-    * Throws an exception if the client requests a capacity that is too large. 
-    * 
-    * @param capacity The capacity requested by the client.
-    */
-    public void checkCapacity(int capacity) {
-
-        if(capacity > MAX_CAPACITY) {
-
-            throw new IllegalStateException("Attempt to create inventory whose capacity exceeds" 
-                + "allowed maximum of " + MAX_CAPACITY);
-
+        boolean result;
+        if(numberOfEntries == 0) {
+            // Assertion: firstNode == null
+            result = true;
+        } else {
+            // Assertion: firstNode != null
+            result = false;
         }
 
+        return result;
     }
 
-    /**
-    * Throws an exception if receiving object is not initialized. 
-    */
-    public void checkintegrity() {
+    public T[] toArray() {
+        @SuppressWarnings("unchecked")
+        T[] result = (T[])new Object[numberOfEntries];
 
-        if(!integrityOK) {
-            throw new SecurityException ("Object is corrupt.");
+        int index = 0; 
+        Node currentNode = firstNode;
+
+        while((index < numberOfEntries) && (currentNode != null)) {
+            result[index] = currentNode.getData();
+            currentNode = currentNode.getNextNode();
+            index++;
         }
+
+        return result;
     }
-
-
-
-
 }
