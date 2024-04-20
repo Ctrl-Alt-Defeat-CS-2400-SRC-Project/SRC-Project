@@ -7,11 +7,7 @@ public class LinkedList<T> implements ListInterface {
     private Node firstNode;
     private int numberOfEntries;
 
-    public LinkedList() {
-        initializeDataFields();
-    }
-
-    public final void clear() {
+    pubic LinkedList() {
         initializeDataFields();
     }
 
@@ -20,21 +16,18 @@ public class LinkedList<T> implements ListInterface {
         numberOfEntries = 0;
     }
 
-    private Node getNodeAt(int givenPosition) {
+    public void add(T newEntry) {
 
-        // Assertion: (firstNode != null) && (1 <= givenPosition) && (givenPosition <= )numberOfNodes)
+        Node newNode = new Node(newEntry);
 
-        Node currentNode = firstNode;
-
-        for(int counter = 1; counter < givenPosition; counter++) {
-
-            currentNode = currentNode.getNextNode();
-
+        if(isEmpty()) {
+            firstNode = newNode;
+        } else {
+            Node lastNode = getNodeAt(numberOfEntries);
+            lastnOde.setNextNode(newNode);
         }
 
-        // Assertion: currentNode != null
-
-        return currentNode;
+        numberOfEntries++;
     }
 
     public void add(int givenPosition, T newEntry) {
@@ -75,8 +68,8 @@ public class LinkedList<T> implements ListInterface {
                 Node nodeBefore = getNodeAt(givenPosition - 1);
                 Node nodeToRemove = nodeBefore.getNextNode();
                 result = nodeToRemove.getData();
+               
                 Node nodeAfter = nodeToRemove.getNextNode();
-
                 nodeBefore.setNextNode(nodeAfter);
 
             }
@@ -87,6 +80,10 @@ public class LinkedList<T> implements ListInterface {
         } else {
             throw new IndexOutOfBoundsException("Illegal position given to remove operation.");
         }
+    }
+
+    public final void clear() {
+        initializeDataFields();
     }
 
     public T replace(int givenPosition, T newEntry) {
@@ -113,6 +110,25 @@ public class LinkedList<T> implements ListInterface {
         }
     }
 
+    public T[] toArray() {
+
+        @SuppressWarnings("unchecked")
+        T[] result = (T[]) new Object[numberOfEntries];
+
+        int index = 0;
+        Node currentNode = firstNode;
+
+        while((index < numberOfEntries) && (currentNode != null)) {
+
+            result[index] = currentNode.getData();
+            currentNode = currentNode.getNextNode();
+            index++;
+
+        }
+
+        return result;
+    }
+
     public boolean contains(T anEntry) {
 
         boolean found = false;
@@ -129,6 +145,13 @@ public class LinkedList<T> implements ListInterface {
         return found;
     }
 
+    public int getLength() {
+
+        return numberOfEntries;
+
+    }
+
+
     public boolean isEmpty() {
 
         boolean result;
@@ -143,19 +166,21 @@ public class LinkedList<T> implements ListInterface {
         return result;
     }
 
-    public T[] toArray() {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[])new Object[numberOfEntries];
+    private Node getNodeAt(int givenPosition) {
 
-        int index = 0; 
+        // Assertion: (firstNode != null) && (1 <= givenPosition) && (givenPosition <= )numberOfNodes)
+
         Node currentNode = firstNode;
 
-        while((index < numberOfEntries) && (currentNode != null)) {
-            result[index] = currentNode.getData();
+        for(int counter = 1; counter < givenPosition; counter++) {
+
             currentNode = currentNode.getNextNode();
-            index++;
+
         }
 
-        return result;
+        // Assertion: currentNode != null
+
+        return currentNode;
     }
+
 }
