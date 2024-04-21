@@ -18,4 +18,12 @@ public class Inventory {
         return true; // STUB
     }
 
+    public Produce getProduce(String produce) {
+        return null; // STUB
+    }
+
+    public boolean contains(String produce) {
+        return true; // STUB
+    }
+
 }

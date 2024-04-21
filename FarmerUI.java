@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -31,7 +32,14 @@ public class FarmerUI {
             "5. Back";
     private static final String EXIT_MESSAGE = "Thank you for using our software!";
 
-    private static ClientBase clientBase = new ClientBase();
+    private static ClientBase clientBase;
+    static {
+        try {
+            clientBase = new ClientBase();
+        } catch (IOException e) {
+            System.out.println("Error loading client base");
+        }
+    }
     private static Inventory inventory = new Inventory();
     private static Scanner scanner = new Scanner(System.in);
 

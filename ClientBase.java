@@ -1,5 +1,9 @@
 import java.util.Iterator;
 import java.util.Arrays;
+import java.nio.file.*;
+import java.io.*;
+import java.util.Scanner;
+import java.util.*;
 
 /**
  * Uses the sorted linked dictionary to create and maintain a list of clients and their orders. 
@@ -8,10 +12,33 @@ import java.util.Arrays;
  * @author Ryan Wei
  */
 public class ClientBase {
+
     private SortedLinkedDictionary<Client, Produce[]> clientBase = new SortedLinkedDictionary<Client, Produce[]>();
     private Inventory inventory = new Inventory();
     private Produce tempProduce = new Produce("placeholder", "none");
     private Produce[] placeholder = {tempProduce};
+    private Path filePath = Paths.get("clients.txt");
+
+    public ClientBase() throws IOException {
+        if (Files.exists(filePath)) {
+            Scanner fileScanner = new Scanner(filePath);
+            while (fileScanner.hasNext()) {
+                String name = fileScanner.next();
+                String address = fileScanner.next();
+                String phone = fileScanner.next();
+                String email = fileScanner.next();
+                int age = fileScanner.nextInt();
+                addClient(name, address, phone, email, age);
+                String produce = fileScanner.next();
+                int quantity = fileScanner.nextInt();
+                addProduce(name, produce, quantity);
+            }
+            
+            fileScanner.close();
+        } else {
+            Files.createFile(filePath);
+        }
+    }
 
     /**
      * Adds a new client to the client base with a placeholder for orders
@@ -35,6 +62,11 @@ public class ClientBase {
         Client newClient = new Client(name, address, phone, email, age);
         clientBase.add(newClient, placeholder);
         if (clientBase.contains(newClient)) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
             success = true;
         }
         return success;
@@ -66,6 +98,11 @@ public class ClientBase {
             for (int i = 0; i < quantity; i++)
                 newOrders[i] = inventory.removeProduce(produce, 1); // need to be added to inventory
             clientBase.add(client, newOrders);
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
             success = true;
         } else {
             Produce[] newOrders = new Produce[orders.length + quantity];
@@ -75,6 +112,11 @@ public class ClientBase {
             for (int i = orders.length; i < newOrders.length; i++)
                 newOrders[i] = inventory.removeProduce(produce, 1); // need to be added to inventory
             clientBase.add(client, newOrders);
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
             success = true;
         }
         return success;
@@ -173,6 +215,11 @@ public class ClientBase {
         } else {
             clientBase.remove(client);
             removed = true;
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
         }
         return removed;
     }
@@ -226,6 +273,12 @@ public class ClientBase {
         }
         if(!removed)
             System.out.println("Order not found\n");
+        else
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
         return removed;
     }
 
@@ -239,10 +292,11 @@ public class ClientBase {
      */
     public boolean cancelOrder(String userName, String produceName, int quantity) {
         boolean cancelled = removeOrder(userName, produceName, quantity);
-        if (cancelled)
+        if (cancelled) {
             inventory.addProduce(getProduce(userName, produceName), quantity);
-        else
+        } else {
             System.out.println("Order not cancelled.\n");
+        }
         return cancelled;
     }
 
@@ -269,6 +323,45 @@ public class ClientBase {
             }
         }
         return count;
+    }
+
+    public boolean containsClient(String userName) {
+        return getClient(userName) != null;
+    }
+
+    public String toString() {
+        String result = "";
+        Iterator<Client> clientIterator = clientBase.getKeyIterator();
+        while (clientIterator.hasNext()) {
+            Client currentClient = clientIterator.next();
+            result += currentClient.toString();
+            Produce[] orders = clientBase.getValue(currentClient);
+            for (int i = 0; i < orders.length; i++) {
+                result += orders[i].toString();
+            }
+        }
+        result += "\n";
+        return result;
+    }
+
+    private void saveToFile() throws IOException {
+        PrintWriter writer = new PrintWriter(filePath.toFile());
+        Iterator<Client> clientIterator = clientBase.getKeyIterator();
+        while (clientIterator.hasNext()) {
+            Client currentClient = clientIterator.next();
+            writer.print(currentClient.getName() + " ");
+            writer.print(currentClient.getAddress() + " ");
+            writer.print(currentClient.getPhone() + " ");
+            writer.print(currentClient.getEmail() + " ");
+            writer.print(currentClient.getAge() + " ");
+            Produce[] orders = clientBase.getValue(currentClient);
+            for (int i = 0; i < orders.length; i++) {
+                writer.print(orders[i].getName() + " ");
+                writer.print(1 + " ");
+            }
+            writer.println();
+        }
+        writer.close();
     }
 
 

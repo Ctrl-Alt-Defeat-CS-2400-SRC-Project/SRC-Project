@@ -77,6 +77,6 @@ public class Client implements Comparable<Client> {
      * @return the information of the client
      */
     public String toString() {
-        return "Name: " + userName + "\nAddress: " + address + "\nPhone: " + phone + "\nEmail: " + email + "\nAge: " + age;
+        return userName + " " + address + " " + phone + " " + email + " " + age + " ";
     }
 }

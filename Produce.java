@@ -58,4 +58,8 @@ public class Produce implements Comparable<Produce> {
         this.season = season;
     }
 
+    public String toString() {
+        return name + " " + season;
+    }
+
 }
