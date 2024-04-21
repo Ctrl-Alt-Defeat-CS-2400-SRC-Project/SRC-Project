@@ -2,7 +2,7 @@
    A Node class that holds references to the data, next node, and count/stock of the item. 
    @author Hasti Abbasi Kenarsari
 */
-private class Node {
+public class Node<T> {
 
     // Entry in list
     private T data;
@@ -12,16 +12,16 @@ private class Node {
     private int count; 
 
     // constructor
-    private Node(T dataPortion) {
+    public Node(T dataPortion) {
         this(dataPortion, null);
     }
 
-    private Node(T dataPortion, Node nextNode) {
+    public Node(T dataPortion, Node nextNode) {
         data = dataPortion; 
         next = nextNode;
     }
 
-    private Node(T dataPortion, Node nextNode, int stock) {
+    public Node(T dataPortion, Node nextNode, int stock) {
         data = dataPortion;
         next = nextNode;
         count = stock;
