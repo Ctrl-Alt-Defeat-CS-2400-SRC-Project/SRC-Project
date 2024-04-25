@@ -1,10 +1,46 @@
+import java.nio.file.*;
+import java.io.*;
+import java.util.*;
+import java.util.LinkedList;
+
 /**
  * Uses the linked list data type to create and maintain a list of stock in the inventory.
  * 
  * @author Hasti Abbasi Kenarsari
  */
 public class Inventory {
+
     private static LinkedList<Produce> inventory = new LinkedList<Produce>();
+    private Path filePath = Paths.get("inventory.txt");
+
+    public Inventory() throws IOException {
+        if (Files.exists(filePath)) {
+            Scanner fileScanner = new Scanner(filePath);
+
+            while (fileScanner.hasNextLine()) {
+
+                String line = fileScanner.nextLine();
+                if (line.isEmpty()) {
+                    continue; 
+                }
+
+                String[] tokens = line.split(";");
+               
+                for (int i = 0; i < tokens.length; i += 3) {
+                    String productName = tokens[i];
+                    String count = Integer.parseInt(tokens[i + 1]);
+                    String season = tokens[i + 2];
+                    addProduce(produceName, count);
+                }
+
+            }
+
+            fileScanner.close();
+
+        } else {
+            Files.createFile(filePath);
+        }
+    }
 
     /**
      * Removes a specified quantity of produce items from the inventory. 
