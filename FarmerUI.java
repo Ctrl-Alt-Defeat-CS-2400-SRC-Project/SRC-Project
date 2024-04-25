@@ -201,10 +201,10 @@ public class FarmerUI {
                     }
                     break;
                 case 4:
-                    System.out.println("Enter client name to view orders:\n");
+                    System.out.println("Enter client name to view orders:");
                     String clientNameView = scanner.nextLine();
                     if(clientBase.getOrders(clientNameView) == null) {
-                        System.out.println("Please try again\n");
+                        System.out.println("Please try again");
                     } else {
                         printOrders(clientBase.getOrders(clientNameView));
                     }
@@ -290,19 +290,23 @@ public class FarmerUI {
     }
 
     private static void printOrders(Produce[] array) {
-        int i = 1;
         Produce currentItem = new Produce("placeholder", "none");
         if(currentItem.equals(array[0])) {
             System.out.println("No orders found");
-        }
-        for (Produce item : array) {
-            if(!currentItem.equals(item)) {
-                System.out.println(currentItem.getName() + " x" + i);
-                i = 1;
-            } else {
-                i++;
+        } else {
+            Produce previousItem = null;
+            int count = 1;
+            for (int i = 0; i < array.length; i++) {
+                currentItem = array[i];
+                if (previousItem != null && currentItem.equals(previousItem)) {
+                    count++;
+                } else if (previousItem != null) {
+                    System.out.println(previousItem.getName() + " x" + count);
+                    count = 1;
+                }
+                previousItem = array[i];
             }
-            currentItem = item;
+            System.out.println(previousItem.getName() + " x" + count);
         }
     }
 

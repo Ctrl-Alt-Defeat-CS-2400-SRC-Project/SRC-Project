@@ -289,7 +289,7 @@ public class ClientBase {
         if(checkQuantity(userName, produce) == 0) {
             System.out.println("No orders found of that type found\n");
             return removed;
-        } else if (checkQuantity(userName, produce) < quantity) {
+        } else if (checkQuantity(userName, produce) < quantity && checkQuantity(userName, produce) > 0) {
             System.out.println("Quantity entered exceeds amount ordered by client\n");
             return removed;
         } else if (checkQuantity(userName, produce) < 0 ) {
@@ -298,7 +298,7 @@ public class ClientBase {
         }
 
         for (int i = 0; i < orders.length; i++) {
-            if (orders[i].equals(getProduce(userName, produce)) && count < quantity) {
+            if (orders[i].getName().equalsIgnoreCase(produce) && count < quantity) {
                 Produce[] newOrders = new Produce[orders.length - 1];
                 for (int j = 0; j < i; j++) {
                     newOrders[j] = orders[j];
@@ -307,6 +307,7 @@ public class ClientBase {
                     newOrders[j - 1] = orders[j];
                 }
                 clientBase.add(client, newOrders);
+                orders = clientBase.getValue(client);
                 removed = true;
                 i--;
                 count++;
@@ -335,8 +336,6 @@ public class ClientBase {
         boolean cancelled = removeOrder(userName, produceName, quantity);
         if (cancelled) {
             Inventory.addProduce(getProduce(userName, produceName), quantity);
-        } else {
-            System.out.println("Order not cancelled.\n");
         }
         return cancelled;
     }
@@ -359,7 +358,7 @@ public class ClientBase {
         }
         int count = 0;
         for (int i = 0; i < orders.length; i++) {
-            if (orders[i].getName().equals(produceName)) {
+            if (orders[i].getName().equalsIgnoreCase(produceName)) {
                 count++;
             }
         }

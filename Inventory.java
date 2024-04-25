@@ -102,6 +102,9 @@ public class Inventory {
     }
 
     public static boolean contains(String produce) {
+        if(getProduce(produce) == null) {
+            return false;
+        }
         return inventory.contains(getProduce(produce));
     }
 
