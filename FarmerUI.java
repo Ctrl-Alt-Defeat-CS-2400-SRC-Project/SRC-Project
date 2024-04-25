@@ -33,14 +33,15 @@ public class FarmerUI {
     private static final String EXIT_MESSAGE = "Thank you for using our software!";
 
     private static ClientBase clientBase;
+    private static Inventory inventory;
     static {
         try {
             clientBase = new ClientBase();
+            inventory = new Inventory();
         } catch (IOException e) {
             System.out.println("Error loading client base");
         }
     }
-    private static Inventory inventory = new Inventory();
     private static Scanner scanner = new Scanner(System.in);
 
     /**
@@ -83,7 +84,7 @@ public class FarmerUI {
                 case 1:
                     System.out.println("Enter produce name to add to inventory: ");
                     String produceName = scanner.nextLine();
-                    if(!inventory.contains(produceName)) {
+                    if(!Inventory.contains(produceName)) {
                         System.out.println("New produce, enter season: ");
                         String season = scanner.nextLine();
                         if(season.equals("")) {
@@ -94,7 +95,7 @@ public class FarmerUI {
                         System.out.println("Enter quantity of produce to add to inventory: ");
                         int quantity = scanner.nextInt();
                         scanner.nextLine();
-                        if(inventory.addProduce(new Produce(produceName, season), quantity)) {
+                        if(Inventory.addProduce(new Produce(produceName, season), quantity)) {
                             System.out.println("Produce added successfully. Press enter to continue.");
                             scanner.nextLine();
                         } else {
@@ -105,7 +106,7 @@ public class FarmerUI {
                         System.out.println("Enter quantity of produce to add to inventory: ");
                         int quantity = scanner.nextInt();
                         scanner.nextLine();
-                        if(inventory.addProduce(inventory.getProduce(produceName), quantity)) {
+                        if(Inventory.addProduce(Inventory.getProduce(produceName), quantity)) {
                             System.out.println("Produce added successfully. Press enter to continue.");
                             scanner.nextLine();
                         } else {
@@ -115,10 +116,24 @@ public class FarmerUI {
                     }
                     break;
                 case 2:
-
+                    System.out.println("Enter produce name to remove from Inventory: ");
+                    String produceNameRemove = scanner.nextLine();
+                    System.out.println("Enter quantity of produce to remove from inventory: ");
+                    int quantityRemove = scanner.nextInt();
+                    scanner.nextLine();
+                    if(Inventory.removeProduce(produceNameRemove, quantityRemove) != null) {
+                        System.out.println("Produce removed successfully. Press enter to continue.");
+                        scanner.nextLine();
+                    } else {
+                        System.out.println("Produce not removed. Please try again. Press enter to continue.");
+                        scanner.nextLine();
+                    }
                     break;
                 case 3:
-
+                    System.out.println("Inventory: ");
+                    System.out.println(inventory.toString());
+                    System.out.println("press enter to continue");
+                    scanner.nextLine();
                     break;
 
                 case 4:
@@ -199,9 +214,9 @@ public class FarmerUI {
                     Client[] allClients = clientBase.getAllClients();
                     int i = 0;
                     for (Produce[] orders : allOrders) {
-                        System.out.println(allClients[i].getName() + "'s Orders: \n");
+                        System.out.println(allClients[i].getName() + "'s Orders: ");
                         printOrders(orders);
-                        System.out.println("\n");
+                        System.out.println("");
                         i++;
                     }
                     System.out.println("press enter to continue");
@@ -281,7 +296,7 @@ public class FarmerUI {
             System.out.println("No orders found");
         }
         for (Produce item : array) {
-            if(!currentItem.equals(new Produce("placeholder", "none")) && !currentItem.equals(item)) {
+            if(!currentItem.equals(item)) {
                 System.out.println(currentItem.getName() + " x" + i);
                 i = 1;
             } else {

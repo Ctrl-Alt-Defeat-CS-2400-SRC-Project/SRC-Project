@@ -33,50 +33,90 @@ public class Client implements Comparable<Client> {
     }
 
     /**
-     * retrieves the user name of the client
-     * @return userName
+     * Sets the user name of the client.
+     * @param name the user name to set
+     */
+    public void setName(String name) {
+        this.userName = name;
+    }
+
+    /**
+     * Sets the address of the client.
+     * @param address the address to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * Sets the phone number of the client.
+     * @param phone the phone number to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     * Sets the email of the client.
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Sets the age of the client.
+     * @param age the age to set
+     */
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    /**
+     * Retrieves the user name of the client.
+     * @return the user name
      */
     public String getName() {
         return userName;
     }
 
     /**
-     * retrieves the address of the client
-     * @return address
+     * Retrieves the address of the client.
+     * @return the address
      */
     public String getAddress() {
         return address;
     }
 
     /**
-     * retrieves the phone number of the client
-     * @return phone
+     * Retrieves the phone number of the client.
+     * @return the phone number
      */
     public String getPhone() {
         return phone;
     }
 
     /**
-     * retrieves the email of the client
-     * @return email
+     * Retrieves the email of the client.
+     * @return the email
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     * retrieves the age of the client
-     * @return age
+     * Retrieves the age of the client.
+     * @return the age
      */
     public int getAge() {
         return age;
     }
 
     /**
-     * retrieves all the information of the client
-     * @return the information of the client
+     * Returns a string representation of the client object.
+     * @return the string representation
      */
     public String toString() {
-        return userName + " " + address + " " + phone + " " + email + " " + age + " ";
+        return "Name: " + userName + "\nAddress: " + address + "\nPhone: " + phone + "\nEmail: " + email + "\nAge: " + age;
     }
 }

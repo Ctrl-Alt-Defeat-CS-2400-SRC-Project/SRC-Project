@@ -14,6 +14,9 @@ public class Produce implements Comparable<Produce> {
     }
 
     private boolean checkInSeason(String season) {
+        if (season.equalsIgnoreCase("year round")) {
+            return true;
+        }
         String currentSeason = getCurrentSeason();
         return season.equalsIgnoreCase(currentSeason);
     }
@@ -34,7 +37,11 @@ public class Produce implements Comparable<Produce> {
 
     @Override
     public int compareTo(Produce other) {
-        return this.name.compareTo(other.getName());
+        return this.name.compareToIgnoreCase(other.getName());
+    }
+
+    public boolean equals(Produce other) {
+        return this.name.equalsIgnoreCase(other.getName());
     }
 
     //getters and setters

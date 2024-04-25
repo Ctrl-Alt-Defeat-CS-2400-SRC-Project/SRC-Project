@@ -4,8 +4,8 @@
  * @author Hasti Abbasi Kenarsari
  */
 public class Inventory {
-    private LinkedList<Produce> inventory = new LinkedList<Produce>();
-    
+    private static LinkedList<Produce> inventory = new LinkedList<Produce>();
+
     /**
      * Removes a specified quantity of produce items from the inventory. 
      * 
@@ -13,30 +13,24 @@ public class Inventory {
      * @param quantity the # of produce items desired to be removed
      * @return returns true if the specified quantity has been removed, and false otherwise.  
      */
-    public boolean removeProduce(String produce, int quantity) {
-
+    public static Produce removeProduce(String produce, int quantity) {
         int count = quantity; 
+        Produce temp = null;
 
         // goes through linked list
-        for(int i = 1; i < inventory.getLength(); i++) {
-
+        for(int i = 1; i < inventory.getLength() + 1; i++) {
             // gets current produce
-            String current = inventory.getNodeAt(i);
+            String current = inventory.getEntry(i).getName();
 
             /*
             * if produce is the same as the one specified in the parameter & all desired instances 
             * haven't been removed, it gets removed & count is decreased
             */
-            if(current.equalsIgnoreCase(produce) && count != 0) {
-
-                inventory.remove(i);
-                count--;
-
+            if(current.equalsIgnoreCase(produce)) {
+                temp = inventory.decreaseProduce(i, count);
             }
-
         }
-
-        return (count == 0);
+        return temp;
     }
 
     /**
@@ -46,28 +40,17 @@ public class Inventory {
      * @param quantity the # of produce items desired to be checked 
      * @return returns true if the quantity of items is in stock
      */
-    public boolean inStock(String produce, int quantity) {
-
-        int count = 0;
-        
-        // goes through linked list
-        for(int i = 1; i < inventory.getLength(); i++) {
-
-            // gets current produce
-            String current = inventory.getNodeAt(i);
-
-            /*
-            * if produce is the same as the one specified in the parameter,
-            * count is increased
-            */
-            if(current.equalsIgnoreCase(produce)) {
-                count++;
-            }
-
+    public static boolean inStock(String produce, int quantity) {
+        Produce temp = getProduce(produce);
+        if (temp == null) {
+            return false;
         }
-
-        // returns true (indicating in stock) if there AT LEAST count # of items
-        return (count >= quantity);
+        int pos = inventory.getPosition(temp);
+        if (pos == -1) {
+            return false;
+        } else {
+            return inventory.inStock(pos, quantity);
+        }
     }
 
     /**
@@ -77,21 +60,57 @@ public class Inventory {
      * @param quantity the # of produce items desired to be checked 
      * @return true if the addition(s) are successful
      */
-    public boolean addProduce(Produce produce, int quantity) {
-        
-        for(int i = 0; i < quantity; i++) {
-            inventory.add(produce);
+    public static boolean addProduce(Produce produce, int quantity) {
+        Produce temp = null;
+        // goes through linked list
+        for(int i = 1; i < inventory.getLength() + 1; i++) {
+            // gets current produce
+            String current = inventory.getEntry(i).getName();
+
+            // if produce is the same as the one specified in the parameter, it gets added
+            if(current.equalsIgnoreCase(produce.getName())) {
+                temp = inventory.increaseProduce(i, quantity);
+                return true;
+            }
         }
 
-        return true;
+        if (temp == null) {
+            inventory.add(produce);
+            for(int i = 1; i < inventory.getLength() + 1; i++) {
+                // gets current produce
+                String current = inventory.getEntry(i).getName();
+    
+                // if produce is the same as the one specified in the parameter, it gets added
+                if(current.equalsIgnoreCase(produce.getName())) {
+                    temp = inventory.increaseProduce(i, quantity);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    public Produce getProduce(String produce) {
-        return null; // STUB
+    public static Produce getProduce(String produce) {
+        Produce temp = null;
+        for (int i = 1; i < inventory.getLength() + 1; i++) {
+            if (inventory.getEntry(i).getName().equalsIgnoreCase(produce)) {
+                temp = inventory.getEntry(i);
+            }
+        }
+        return temp;
     }
 
-    public boolean contains(String produce) {
-        return true; // STUB
+    public static boolean contains(String produce) {
+        return inventory.contains(getProduce(produce));
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= inventory.getLength(); i++) {
+            Produce produce = inventory.getEntry(i);
+            sb.append(produce.getName()).append(": ").append(inventory.getStock(i)).append("\n");
+        }
+        return sb.toString();
+    }
 }
