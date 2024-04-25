@@ -86,6 +86,7 @@ public class FarmerUI {
                     String produceName = scanner.nextLine();
                     if(!Inventory.contains(produceName)) {
                         System.out.println("New produce, enter season: ");
+                        System.out.println("Seasons: spring, summer, fall, winter, or year round");
                         String season = scanner.nextLine();
                         if(season.equals("")) {
                             System.out.println("Season required. Please try again. Press enter to continue.");
@@ -207,6 +208,8 @@ public class FarmerUI {
                         System.out.println("Please try again");
                     } else {
                         printOrders(clientBase.getOrders(clientNameView));
+                        System.out.println("press enter to continue");
+                        scanner.nextLine();
                     }
                     break;
                 case 5:
