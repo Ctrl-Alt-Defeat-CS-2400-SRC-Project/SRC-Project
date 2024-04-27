@@ -1,5 +1,9 @@
 import java.util.Iterator;
 import java.util.Arrays;
+import java.nio.file.*;
+import java.io.*;
+import java.util.Scanner;
+import java.util.*;
 
 /**
  * Uses the sorted linked dictionary to create and maintain a list of clients and their orders. 
@@ -8,10 +12,39 @@ import java.util.Arrays;
  * @author Ryan Wei
  */
 public class ClientBase {
+
     private SortedLinkedDictionary<Client, Produce[]> clientBase = new SortedLinkedDictionary<Client, Produce[]>();
-    private Inventory inventory = new Inventory();
     private Produce tempProduce = new Produce("placeholder", "none");
     private Produce[] placeholder = {tempProduce};
+    private Path filePath = Paths.get("clients.txt");
+
+    public ClientBase() throws IOException {
+        if (Files.exists(filePath)) {
+            Scanner fileScanner = new Scanner(filePath);
+
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                if (line.isEmpty()) {
+                    continue; // Skip empty lines
+                }
+                String[] tokens = line.split(";");
+                String name = tokens[0];
+                String address = tokens[1];
+                String phone = tokens[2];
+                String email = tokens[3];
+                int age = Integer.parseInt(tokens[4]);
+                addClient(name, address, phone, email, age);
+                for (int i = 5; i < tokens.length; i += 2) {
+                    String produce = tokens[i];
+                    String season = tokens[i + 1];
+                    addProduce(name, produce, season);
+                }
+            }
+            fileScanner.close();
+        } else {
+            Files.createFile(filePath);
+        }
+    }
 
     /**
      * Adds a new client to the client base with a placeholder for orders
@@ -33,15 +66,55 @@ public class ClientBase {
             return success;
         }
         Client newClient = new Client(name, address, phone, email, age);
-        clientBase.add(newClient, placeholder);
+        clientBase.add(newClient, Arrays.copyOf(placeholder, placeholder.length));
         if (clientBase.contains(newClient)) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
+            success = true;
+        }
+        return success;
+    }
+
+    private boolean addProduce(String userName, String produce, String season) {
+        boolean success = false;
+        Client client = getClient(userName);
+        if (client == null) {
+            System.out.println("Client not found\n");
+            return success;
+        }
+        Produce[] orders = clientBase.getValue(client);
+        if (orders[0].compareTo(placeholder[0]) == 0) {
+            Produce[] newOrders = new Produce[1];
+            newOrders[0] = new Produce(produce, season);
+            clientBase.add(client, newOrders);
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
+            success = true;
+        } else {
+            Produce[] newOrders = new Produce[orders.length + 1];
+            for (int i = 0; i < orders.length; i++) {
+                newOrders[i] = orders[i];
+            }
+            newOrders[orders.length] = new Produce(produce, season);
+            clientBase.add(client, newOrders);
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
             success = true;
         }
         return success;
     }
 
     /**
-     * adds an order to the client's list of orders, removes the same amount from the inventory
+     * adds an order to the client's list of orders, removes the same amount from the Inventory
      * 
      * @param userName the user name of the client to add to
      * @param produce the produce to add to the order
@@ -55,17 +128,22 @@ public class ClientBase {
             System.out.println("Client not found\n");
             return success;
         }
-        if (!inventory.inStock(produce, quantity)) { // need to be added to inventory
+        if (!Inventory.inStock(produce, quantity)) { // need to be added to Inventory
             System.out.println("Not enough produce in stock\n");
             return success;
         }
 
         Produce[] orders = clientBase.getValue(client);
-        if (orders.equals(placeholder)) {
+        if (orders[0].compareTo(placeholder[0]) == 0) {
             Produce[] newOrders = new Produce[quantity];
             for (int i = 0; i < quantity; i++)
-                newOrders[i] = inventory.removeProduce(produce, 1); // need to be added to inventory
+                newOrders[i] = Inventory.removeProduce(produce, 1); // need to be added to Inventory
             clientBase.add(client, newOrders);
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
             success = true;
         } else {
             Produce[] newOrders = new Produce[orders.length + quantity];
@@ -73,8 +151,13 @@ public class ClientBase {
                 newOrders[i] = orders[i];
             }
             for (int i = orders.length; i < newOrders.length; i++)
-                newOrders[i] = inventory.removeProduce(produce, 1); // need to be added to inventory
+                newOrders[i] = Inventory.removeProduce(produce, 1); // need to be added to Inventory
             clientBase.add(client, newOrders);
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
             success = true;
         }
         return success;
@@ -173,6 +256,11 @@ public class ClientBase {
         } else {
             clientBase.remove(client);
             removed = true;
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
         }
         return removed;
     }
@@ -201,7 +289,7 @@ public class ClientBase {
         if(checkQuantity(userName, produce) == 0) {
             System.out.println("No orders found of that type found\n");
             return removed;
-        } else if (checkQuantity(userName, produce) < quantity) {
+        } else if (checkQuantity(userName, produce) < quantity && checkQuantity(userName, produce) > 0) {
             System.out.println("Quantity entered exceeds amount ordered by client\n");
             return removed;
         } else if (checkQuantity(userName, produce) < 0 ) {
@@ -210,7 +298,7 @@ public class ClientBase {
         }
 
         for (int i = 0; i < orders.length; i++) {
-            if (orders[i].equals(getProduce(userName, produce)) && count < quantity) {
+            if (orders[i].getName().equalsIgnoreCase(produce) && count < quantity) {
                 Produce[] newOrders = new Produce[orders.length - 1];
                 for (int j = 0; j < i; j++) {
                     newOrders[j] = orders[j];
@@ -219,6 +307,7 @@ public class ClientBase {
                     newOrders[j - 1] = orders[j];
                 }
                 clientBase.add(client, newOrders);
+                orders = clientBase.getValue(client);
                 removed = true;
                 i--;
                 count++;
@@ -226,11 +315,17 @@ public class ClientBase {
         }
         if(!removed)
             System.out.println("Order not found\n");
+        else
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                System.out.println("Error saving to file");
+            }
         return removed;
     }
 
     /**
-     * Cancels an order and adds the produce back to the inventory
+     * Cancels an order and adds the produce back to the Inventory
      * 
      * @param userName the user name of the client
      * @param produceName the name of the produce
@@ -239,10 +334,9 @@ public class ClientBase {
      */
     public boolean cancelOrder(String userName, String produceName, int quantity) {
         boolean cancelled = removeOrder(userName, produceName, quantity);
-        if (cancelled)
-            inventory.addProduce(getProduce(userName, produceName), quantity);
-        else
-            System.out.println("Order not cancelled.\n");
+        if (cancelled) {
+            Inventory.addProduce(getProduce(userName, produceName), quantity);
+        }
         return cancelled;
     }
 
@@ -264,11 +358,50 @@ public class ClientBase {
         }
         int count = 0;
         for (int i = 0; i < orders.length; i++) {
-            if (orders[i].getName().equals(produceName)) {
+            if (orders[i].getName().equalsIgnoreCase(produceName)) {
                 count++;
             }
         }
         return count;
+    }
+
+    public boolean containsClient(String userName) {
+        return getClient(userName) != null;
+    }
+
+    public String toString() {
+        String result = "";
+        Iterator<Client> clientIterator = clientBase.getKeyIterator();
+        while (clientIterator.hasNext()) {
+            Client currentClient = clientIterator.next();
+            result += currentClient.toString();
+            Produce[] orders = clientBase.getValue(currentClient);
+            for (int i = 0; i < orders.length; i++) {
+                result += orders[i].toString();
+            }
+        }
+        result += "\n";
+        return result;
+    }
+
+    private void saveToFile() throws IOException {
+        PrintWriter writer = new PrintWriter(filePath.toFile());
+        Iterator<Client> clientIterator = clientBase.getKeyIterator();
+        while (clientIterator.hasNext()) {
+            Client currentClient = clientIterator.next();
+            writer.print(currentClient.getName() + ";");
+            writer.print(currentClient.getAddress() + ";");
+            writer.print(currentClient.getPhone() + ";");
+            writer.print(currentClient.getEmail() + ";");
+            writer.print(currentClient.getAge() + ";");
+            Produce[] orders = clientBase.getValue(currentClient);
+            for (int i = 0; i < orders.length; i++) {
+                writer.print(orders[i].getName() + ";");
+                writer.print(orders[i].getSeason() + ";");
+            }
+            writer.println();
+        }
+        writer.close();
     }
 
 

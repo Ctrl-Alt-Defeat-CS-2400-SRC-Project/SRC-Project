@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -31,8 +32,16 @@ public class FarmerUI {
             "5. Back";
     private static final String EXIT_MESSAGE = "Thank you for using our software!";
 
-    private static ClientBase clientBase = new ClientBase();
-    private static Inventory inventory = new Inventory();
+    private static ClientBase clientBase;
+    private static Inventory inventory;
+    static {
+        try {
+            clientBase = new ClientBase();
+            inventory = new Inventory();
+        } catch (IOException e) {
+            System.out.println("Error loading client base");
+        }
+    }
     private static Scanner scanner = new Scanner(System.in);
 
     /**
@@ -75,8 +84,9 @@ public class FarmerUI {
                 case 1:
                     System.out.println("Enter produce name to add to inventory: ");
                     String produceName = scanner.nextLine();
-                    if(!inventory.contains(produceName)) {
+                    if(!Inventory.contains(produceName)) {
                         System.out.println("New produce, enter season: ");
+                        System.out.println("Seasons: spring, summer, fall, winter, or year round");
                         String season = scanner.nextLine();
                         if(season.equals("")) {
                             System.out.println("Season required. Please try again. Press enter to continue.");
@@ -86,7 +96,7 @@ public class FarmerUI {
                         System.out.println("Enter quantity of produce to add to inventory: ");
                         int quantity = scanner.nextInt();
                         scanner.nextLine();
-                        if(inventory.addProduce(new Produce(produceName, season), quantity)) {
+                        if(Inventory.addProduce(new Produce(produceName, season), quantity)) {
                             System.out.println("Produce added successfully. Press enter to continue.");
                             scanner.nextLine();
                         } else {
@@ -97,7 +107,7 @@ public class FarmerUI {
                         System.out.println("Enter quantity of produce to add to inventory: ");
                         int quantity = scanner.nextInt();
                         scanner.nextLine();
-                        if(inventory.addProduce(inventory.getProduce(produceName), quantity)) {
+                        if(Inventory.addProduce(Inventory.getProduce(produceName), quantity)) {
                             System.out.println("Produce added successfully. Press enter to continue.");
                             scanner.nextLine();
                         } else {
@@ -107,10 +117,24 @@ public class FarmerUI {
                     }
                     break;
                 case 2:
-
+                    System.out.println("Enter produce name to remove from Inventory: ");
+                    String produceNameRemove = scanner.nextLine();
+                    System.out.println("Enter quantity of produce to remove from inventory: ");
+                    int quantityRemove = scanner.nextInt();
+                    scanner.nextLine();
+                    if(Inventory.removeProduce(produceNameRemove, quantityRemove) != null) {
+                        System.out.println("Produce removed successfully. Press enter to continue.");
+                        scanner.nextLine();
+                    } else {
+                        System.out.println("Produce not removed. Please try again. Press enter to continue.");
+                        scanner.nextLine();
+                    }
                     break;
                 case 3:
-
+                    System.out.println("Inventory: ");
+                    System.out.println(inventory.toString());
+                    System.out.println("press enter to continue");
+                    scanner.nextLine();
                     break;
 
                 case 4:
@@ -178,12 +202,14 @@ public class FarmerUI {
                     }
                     break;
                 case 4:
-                    System.out.println("Enter client name to view orders:\n");
+                    System.out.println("Enter client name to view orders:");
                     String clientNameView = scanner.nextLine();
                     if(clientBase.getOrders(clientNameView) == null) {
-                        System.out.println("Please try again\n");
+                        System.out.println("Please try again");
                     } else {
                         printOrders(clientBase.getOrders(clientNameView));
+                        System.out.println("press enter to continue");
+                        scanner.nextLine();
                     }
                     break;
                 case 5:
@@ -191,9 +217,9 @@ public class FarmerUI {
                     Client[] allClients = clientBase.getAllClients();
                     int i = 0;
                     for (Produce[] orders : allOrders) {
-                        System.out.println(allClients[i].getName() + "'s Orders: \n");
+                        System.out.println(allClients[i].getName() + "'s Orders: ");
                         printOrders(orders);
-                        System.out.println("\n");
+                        System.out.println("");
                         i++;
                     }
                     System.out.println("press enter to continue");
@@ -267,19 +293,23 @@ public class FarmerUI {
     }
 
     private static void printOrders(Produce[] array) {
-        int i = 1;
         Produce currentItem = new Produce("placeholder", "none");
         if(currentItem.equals(array[0])) {
             System.out.println("No orders found");
-        }
-        for (Produce item : array) {
-            if(!currentItem.equals(new Produce("placeholder", "none")) && !currentItem.equals(item)) {
-                System.out.println(currentItem.getName() + " x" + i);
-                i = 1;
-            } else {
-                i++;
+        } else {
+            Produce previousItem = null;
+            int count = 1;
+            for (int i = 0; i < array.length; i++) {
+                currentItem = array[i];
+                if (previousItem != null && currentItem.equals(previousItem)) {
+                    count++;
+                } else if (previousItem != null) {
+                    System.out.println(previousItem.getName() + " x" + count);
+                    count = 1;
+                }
+                previousItem = array[i];
             }
-            currentItem = item;
+            System.out.println(previousItem.getName() + " x" + count);
         }
     }
 
