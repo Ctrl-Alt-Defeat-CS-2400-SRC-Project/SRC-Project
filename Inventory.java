@@ -28,7 +28,7 @@ public class Inventory {
                
                 for (int i = 0; i < tokens.length; i += 3) {
                     String productName = tokens[i];
-                    String count = Integer.parseInt(tokens[i + 1]);
+                    int count = Integer.parseInt(tokens[i + 1]);
                     String season = tokens[i + 2];
                     addProduce(produceName, count);
                 }
