@@ -1,7 +1,6 @@
 import java.nio.file.*;
 import java.io.*;
 import java.util.*;
-import java.util.LinkedList;
 
 /**
  * Uses the linked list data type to create and maintain a list of stock in the inventory.
@@ -11,7 +10,7 @@ import java.util.LinkedList;
 public class Inventory {
 
     private static LinkedList<Produce> inventory = new LinkedList<Produce>();
-    private Path filePath = Paths.get("inventory.txt");
+    private static Path filePath = Paths.get("inventory.txt");
 
     public Inventory() throws IOException {
         if (Files.exists(filePath)) {
@@ -27,10 +26,10 @@ public class Inventory {
                 String[] tokens = line.split(";");
                
                 for (int i = 0; i < tokens.length; i += 3) {
-                    String productName = tokens[i];
+                    String produceName = tokens[i];
                     int count = Integer.parseInt(tokens[i + 1]);
                     String season = tokens[i + 2];
-                    addProduce(produceName, count);
+                    addProduce(new Produce(produceName, season), count);
                 }
 
             }
@@ -66,6 +65,14 @@ public class Inventory {
                 temp = inventory.decreaseProduce(i, count);
             }
         }
+
+        
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            System.out.println("Error saving to file");
+        }
+
         return temp;
     }
 
@@ -106,6 +113,13 @@ public class Inventory {
             // if produce is the same as the one specified in the parameter, it gets added
             if(current.equalsIgnoreCase(produce.getName())) {
                 temp = inventory.increaseProduce(i, quantity);
+
+                try {
+                    saveToFile();
+                } catch (IOException e) {
+                    System.out.println("Error saving to file");
+                }
+                
                 return true;
             }
         }
@@ -119,6 +133,13 @@ public class Inventory {
                 // if produce is the same as the one specified in the parameter, it gets added
                 if(current.equalsIgnoreCase(produce.getName())) {
                     temp = inventory.increaseProduce(i, quantity);
+
+                    try {
+                        saveToFile();
+                    } catch (IOException e) {
+                        System.out.println("Error saving to file");
+                    }
+                    
                     return true;
                 }
             }
@@ -152,4 +173,22 @@ public class Inventory {
         }
         return sb.toString();
     }
+
+    private static void saveToFile() throws IOException {
+        PrintWriter writer = new PrintWriter(filePath.toFile());
+        Iterator<Produce> inventoryIterator = inventory.getKeyIterator();
+        while (inventoryIterator.hasNext()) {
+
+            Produce current = inventoryIterator.next();
+            writer.print(current.getName() + ";");
+            // DOUBLE CHECK
+            //writer.print(current.getQuantity() + ";");
+            writer.print(current.getSeason() + ";");
+           
+            writer.println();
+        }
+
+        writer.close();
+    }
+
 }
