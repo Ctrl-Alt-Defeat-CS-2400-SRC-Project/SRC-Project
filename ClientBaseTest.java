@@ -111,8 +111,7 @@ class ClientBaseTest {
     @Test
     void testCancelOrder() {
         assertTrue(clientBase.cancelOrder("John", "Apple", 2));
-        //assertEquals(5, inventory.getQuantity(new Produce("Apple", "Fruit")));
-
+        assertEquals(5, inventory.getQuantity(new Produce("Apple", "Fruit")));
         assertFalse(clientBase.cancelOrder("John", "Apple", 4));
         assertEquals(3, clientBase.checkQuantity("John", "Apple"));
 

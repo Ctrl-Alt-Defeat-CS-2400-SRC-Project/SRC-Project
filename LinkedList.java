@@ -23,7 +23,7 @@ public class LinkedList<T> implements ListInterface<T> {
         if(isEmpty()) {
             firstNode = newNode;
         } else {
-            Node<T> lastNode = getNodeAt(numberOfEntries);
+            Node lastNode = getNodeAt(numberOfEntries);
             lastNode.setNextNode(newNode);
         }
 

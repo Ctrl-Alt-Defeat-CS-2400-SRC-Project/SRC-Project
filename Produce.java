@@ -21,7 +21,7 @@ public class Produce implements Comparable<Produce> {
         return season.equalsIgnoreCase(currentSeason);
     }
 
-    private String getCurrentSeason() {
+    public String getCurrentSeason() {
         LocalDate currentDate = LocalDate.now();
         int month = currentDate.getMonthValue();
         if (month >= 3 && month <= 5) {
