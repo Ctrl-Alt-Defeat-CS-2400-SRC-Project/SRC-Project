@@ -13,12 +13,12 @@ public class Produce implements Comparable<Produce> {
         this.inSeason = checkInSeason(season);
     }
 
-    private boolean checkInSeason(String season) {
+    public boolean checkInSeason(String season) {
         String currentSeason = getCurrentSeason();
         return season.equalsIgnoreCase(currentSeason);
     }
 
-    private String getCurrentSeason() {
+    public String getCurrentSeason() {
         LocalDate currentDate = LocalDate.now();
         int month = currentDate.getMonthValue();
         if (month >= 3 && month <= 5) {

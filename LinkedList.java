@@ -24,7 +24,7 @@ public class LinkedList<T> implements ListInterface {
             firstNode = newNode;
         } else {
             Node lastNode = getNodeAt(numberOfEntries);
-            lastnOde.setNextNode(newNode);
+            lastNode.setNextNode(newNode);
         }
 
         numberOfEntries++;
