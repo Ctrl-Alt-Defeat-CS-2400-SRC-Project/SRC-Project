@@ -174,21 +174,27 @@ public class Inventory {
         return sb.toString();
     }
 
-    private static void saveToFile() throws IOException {
-        PrintWriter writer = new PrintWriter(filePath.toFile());
-        Iterator<Produce> inventoryIterator = inventory.getKeyIterator();
-        while (inventoryIterator.hasNext()) {
+    private void saveToFile() throws IOException {
 
-            Produce current = inventoryIterator.next();
+        PrintWriter writer = new PrintWriter(filePath.toFile());
+
+        // goes through all Produce nodes in inventory
+        for(int i = 1; i <= inventory.getCount(); i++) {
+
+            // stores current produce in a var
+            Produce current = inventory.getNodeAt(i);
+
+            // prints name, quantity, and season
             writer.print(current.getName() + ";");
-            // DOUBLE CHECK
-            //writer.print(current.getQuantity() + ";");
+            writer.print(current.getStock() + ";");
             writer.print(current.getSeason() + ";");
-           
+
             writer.println();
+
         }
 
         writer.close();
+
     }
 
 }

@@ -217,4 +217,10 @@ public class LinkedList<T> implements ListInterface<T> {
         return currentNode;
     }
 
+    public int getCount() {
+
+        return numberOfEntries;
+        
+    }
+
 }
