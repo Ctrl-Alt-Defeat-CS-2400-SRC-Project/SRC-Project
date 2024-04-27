@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
  * 
  * @author Ryan Wei
  */
-public class ClientUI {
+public class ClientUI_M {
     private static ClientBase clientBase = new ClientBase();
     private static Inventory inventory = new Inventory();
     public static void start() {
