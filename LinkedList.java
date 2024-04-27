@@ -25,7 +25,7 @@ public class LinkedList<T> implements ListInterface<T> {
         } else {
 
             Node<T> lastNode = getNodeAt(numberOfEntries);
-          
+         
             lastNode.setNextNode(newNode);
         }
 
@@ -217,6 +217,12 @@ public class LinkedList<T> implements ListInterface<T> {
         // Assertion: currentNode != null
 
         return currentNode;
+    }
+
+    public int getCount() {
+
+        return numberOfEntries;
+        
     }
 
 }
