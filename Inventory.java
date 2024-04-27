@@ -30,7 +30,7 @@ public class Inventory {
                     String productName = tokens[i];
                     String count = Integer.parseInt(tokens[i + 1]);
                     String season = tokens[i + 2];
-                    addProduce(produceName, count);
+                    addProduce(new Produce(produceName, season), count);
                 }
 
             }
@@ -66,6 +66,14 @@ public class Inventory {
                 temp = inventory.decreaseProduce(i, count);
             }
         }
+
+        
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            System.out.println("Error saving to file");
+        }
+
         return temp;
     }
 
@@ -106,6 +114,13 @@ public class Inventory {
             // if produce is the same as the one specified in the parameter, it gets added
             if(current.equalsIgnoreCase(produce.getName())) {
                 temp = inventory.increaseProduce(i, quantity);
+
+                try {
+                    saveToFile();
+                } catch (IOException e) {
+                    System.out.println("Error saving to file");
+                }
+                
                 return true;
             }
         }
@@ -119,6 +134,13 @@ public class Inventory {
                 // if produce is the same as the one specified in the parameter, it gets added
                 if(current.equalsIgnoreCase(produce.getName())) {
                     temp = inventory.increaseProduce(i, quantity);
+
+                    try {
+                        saveToFile();
+                    } catch (IOException e) {
+                        System.out.println("Error saving to file");
+                    }
+                    
                     return true;
                 }
             }
@@ -152,4 +174,22 @@ public class Inventory {
         }
         return sb.toString();
     }
+
+    private void saveToFile() throws IOException {
+        PrintWriter writer = new PrintWriter(filePath.toFile());
+        Iterator<Produce> inventoryIterator = inventory.getKeyIterator();
+        while (inventoryIterator.hasNext()) {
+
+            Produce current = inventoryIterator.next();
+            writer.print(current.getName() + ";");
+            // DOUBLE CHECK
+            //writer.print(current.getQuantity() + ";");
+            writer.print(current.getSeason() + ";");
+           
+            writer.println();
+        }
+
+        writer.close();
+    }
+
 }
