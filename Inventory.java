@@ -1,7 +1,6 @@
 import java.nio.file.*;
 import java.io.*;
 import java.util.*;
-import java.util.LinkedList;
 
 /**
  * Uses the linked list data type to create and maintain a list of stock in the inventory.
@@ -11,7 +10,7 @@ import java.util.LinkedList;
 public class Inventory {
 
     private static LinkedList<Produce> inventory = new LinkedList<Produce>();
-    private Path filePath = Paths.get("inventory.txt");
+    private static Path filePath = Paths.get("inventory.txt");
 
     public Inventory() throws IOException {
         if (Files.exists(filePath)) {
@@ -27,8 +26,8 @@ public class Inventory {
                 String[] tokens = line.split(";");
                
                 for (int i = 0; i < tokens.length; i += 3) {
-                    String productName = tokens[i];
-                    String count = Integer.parseInt(tokens[i + 1]);
+                    String produceName = tokens[i];
+                    int count = Integer.parseInt(tokens[i + 1]);
                     String season = tokens[i + 2];
                     addProduce(new Produce(produceName, season), count);
                 }
@@ -175,7 +174,7 @@ public class Inventory {
         return sb.toString();
     }
 
-    private void saveToFile() throws IOException {
+    private static void saveToFile() throws IOException {
         PrintWriter writer = new PrintWriter(filePath.toFile());
         Iterator<Produce> inventoryIterator = inventory.getKeyIterator();
         while (inventoryIterator.hasNext()) {
