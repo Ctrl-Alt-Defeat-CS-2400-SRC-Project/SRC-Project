@@ -13,7 +13,8 @@ public class Produce implements Comparable<Produce> {
         this.inSeason = checkInSeason(season);
     }
 
-    private boolean checkInSeason(String season) {
+
+    public boolean checkInSeason(String season) {
         if (season.equalsIgnoreCase("year round")) {
             return true;
         }
