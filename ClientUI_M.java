@@ -89,11 +89,23 @@ public class ClientUI_M extends JFrame implements ActionListener{
         System.out.println("Logged in logic goes here.");
     }
 
-    public void changeInfo(String username) {
-        // Implement the change info logic here
-        System.out.println("Change info logic goes here.");
+    public void viewOrder(String username) {
+        // Implement viewOrder
     }
 
+    public void cancelOrder(String username) {
+        // Implement cancelOrder
+    }
+
+    public void changeInfo(String username) {
+        // Implement changeInfo
+    }
+
+    public void viewInfo(String username) {
+        // Implement viewInfo
+    }
+
+    // Alex
     public void requestOrder(String username) {
         // Implement the request order logic here
         System.out.println("Request order logic goes here.");
