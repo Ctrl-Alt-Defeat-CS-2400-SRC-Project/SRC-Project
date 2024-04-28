@@ -1,11 +1,114 @@
+//import javax.swing.JOptionPane; old code
+// JFrame creates windows in GUI
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.SwingUtilities;
+import javax.swing.JPanel;
+import javax.swing.BoxLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+
+/**
+ * A class that uses java swing to provide a user interface for the client.
+ * The client will be able to sign in, change information, view stock, and request orders.
+ * 
+ * @author Medha Swarnachandrabalaji, Alex Auyon, Ryan Wei
+ */
+public class ClientUI extends JFrame implements ActionListener {
+    private static ClientBase clientBase;
+    private static Inventory inventory;
+    private static JTextField nameField;
+    private static String username;
+    private static JButton login;
+    private static JButton signup;
+
+
+    public ClientUI(){
+        try{
+            clientBase = new ClientBase();
+            inventory = new Inventory();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        //create a new JFrame
+        JFrame frame = new JFrame("Client UI");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 600);
+        frame.setLayout(new GridLayout(4, 1));
+        
+        //create a new JPanel
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        //create a new JLabel
+        JLabel label = new JLabel("Welcome! Please sign up or log in.");
+        panel.add(label);
+        
+        //create a new JButton
+        login = new JButton("Log in");
+        login.addActionListener(this);
+        panel.add(login);
+
+        //create a new JButton
+        signup = new JButton("Sign up");
+        signup.addActionListener(this);
+        panel.add(signup);
+        
+        //add the panel to the frame
+        frame.add(panel);
+        
+        //make the frame visible
+        frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //get the text from the JTextField
+        username = nameField.getText();
+        if(e.getSource() == login) {
+            loggedIn(username);
+        } else if(e.getSource() == signup) {
+            signUp(username);
+        }
+    }
+
+    public static void start() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new ClientUI();
+            }
+        });
+    }
+
+    public static void loggedIn(String name) {
+        // STUB
+    }
+
+    public static void signUp(String name) {
+        // STUB
+    }
+
+}
+
+
+
+
+
 
 /**
  * A class that uses joptions panels to provide a user interface for the client.
  * The client will be able to sign in, change information, and request orders.
  * 
+ * old code from ClientUI.java; new code now uses java swing and jframe
+ * 
  * @author Ryan Wei
  */
+/* 
 public class ClientUI {
     private static ClientBase clientBase = new ClientBase();
     private static Inventory inventory = new Inventory();
@@ -102,3 +205,4 @@ public class ClientUI {
     }
 
 }
+*/
