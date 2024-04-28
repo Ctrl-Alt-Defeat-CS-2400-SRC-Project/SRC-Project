@@ -1,32 +1,130 @@
 //import javax.swing.JOptionPane;
+// JFrame creates windows in GUI
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.SwingUtilities;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
 
 /**
  * A class that uses joptions panels to provide a user interface for the client.
  * The client will be able to sign in, change information, and request orders.
  * 
- * @author Ryan Wei
+ * @author Medha Swarnachandrabalaji, Alex Auyon, Ryan Wei
  */
-public class ClientUI_M {
-    private JFrame frame;
-    private int width;
-    private int height;
+public class ClientUI_M extends JFrame implements ActionListener{
+    private static ClientBase clientBase = new ClientBase();
+    private static Inventory inventory = new Inventory();
 
-    public ClientUI_M(int w, int h){
-        frame = new JFrame();
-        width = w;
-        height = h;
-    }
+    // to show text
+    private JLabel nameLabel, addressLabel, phoneLabel, emailLabel, ageLabel;
+    // for text input
+    private JTextField nameField, addressField, phoneField, emailField, ageField;
+    // button for login
+    private JButton loginButton;
 
-    public void setUpGUI(){
-        frame.setSize(width, height);
-        // set title to JFrame
-        frame.setTitle("ClientUI");
+    public ClientUI_M() {
+        // uses JFrame constructor 
+        // frame is initially invisible w/ title
+        super("Client UI");
         // application closes after x-button is pressed
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // show window
-        frame.setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 300);
+        // each cell of the grid can hold one component
+        setLayout(new GridLayout(6, 2));
+
+        nameLabel = new JLabel("User Name:");
+        addressLabel = new JLabel("Address:");
+        phoneLabel = new JLabel("Phone Number:");
+        emailLabel = new JLabel("Email:");
+        ageLabel = new JLabel("Age:");
+
+        nameField = new JTextField();
+        addressField = new JTextField();
+        phoneField = new JTextField();
+        emailField = new JTextField();
+        ageField = new JTextField();
+
+        loginButton = new JButton("Login");
+        // ClientUI is a JFrame so parameter is this
+        loginButton.addActionListener(this);
+
+        // display text in GUI
+        // add is defined in Container (one of JFrame's super classes)
+        add(nameLabel);
+        add(nameField);
+        add(addressLabel);
+        add(addressField);
+        add(phoneLabel);
+        add(phoneField);
+        add(emailLabel);
+        add(emailField);
+        add(ageLabel);
+        add(ageField);
+        add(new JLabel()); // Placeholder to visually separate components
+        add(loginButton);
+
+        // makes JFrame visible on screen
+        // defined in Component class
+        setVisible(true);
     }
+
+    // because ClientUI implements the ActionListener interface,
+    // it needs to provide an implementation for the actionPerformed(ActionEvent e) method
+    public void actionPerformed(ActionEvent e) {
+        String name = nameField.getText();
+        if (clientBase.containsClient(name)) {
+            loggedIn(name);
+        } else {
+            // Implement the sign-up logic here
+            System.out.println("Sign up logic goes here.");
+        }
+    }
+
+    public void loggedIn(String username) {
+        // Implement the logged-in logic here
+        System.out.println("Logged in logic goes here.");
+    }
+
+    public void changeInfo(String username) {
+        // Implement the change info logic here
+        System.out.println("Change info logic goes here.");
+    }
+
+    public void requestOrder(String username) {
+        // Implement the request order logic here
+        System.out.println("Request order logic goes here.");
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ClientUI::new);
+    }
+}
+
+    // private JFrame frame;
+    // private int width;
+    // private int height;
+
+    // public ClientUI_M(int w, int h){
+    //     frame = new JFrame();
+    //     width = w;
+    //     height = h;
+    // }
+
+    // public void setUpGUI(){
+    //     frame.setSize(width, height);
+    //     // set title to JFrame
+    //     frame.setTitle("ClientUI");
+    //     // application closes after x-button is pressed
+    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //     // show window
+    //     frame.setVisible(true);
+    // }
+
+
     // private static ClientBase clientBase = new ClientBase();
     // private static Inventory inventory = new Inventory();
     // public static void start() {
@@ -121,4 +219,4 @@ public class ClientUI_M {
     //     }
     // }
 
-}
+//}
