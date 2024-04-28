@@ -2,6 +2,7 @@
 // JFrame creates windows in GUI
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
@@ -22,11 +23,20 @@ public class ClientUI_M extends JFrame implements ActionListener{
     private static Inventory inventory = new Inventory();
 
     // to show text
-    private JLabel nameLabel, addressLabel, phoneLabel, emailLabel, ageLabel;
+    private JLabel nameLabel = new JLabel("User Name:");
+    private JLabel addressLabel = new JLabel("Address:");
+    private JLabel phoneLabel = new JLabel("Phone Number:");
+    private JLabel emailLabel = new JLabel("Email:");
+    private JLabel ageLabel = new JLabel("Age:");
     // for text input
-    private JTextField nameField, addressField, phoneField, emailField, ageField;
-    // button for login
-    private JButton loginButton, viewOrderButton;
+    private JTextField nameField = new JTextField();
+    private JTextField addressField = new JTextField();
+    private JTextField phoneField = new JTextField();
+    private JTextField emailField = new JTextField();
+    private JTextField ageField = new JTextField();
+    
+    private JButton loginButton = new JButton("Login");
+    private JButton viewOrderButton = new JButton("View Order");
 
     public ClientUI_M() {
         // uses JFrame constructor 
@@ -35,43 +45,24 @@ public class ClientUI_M extends JFrame implements ActionListener{
         // application closes after x-button is pressed
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
-        // each cell of the grid can hold one component
-        setLayout(new GridLayout(6, 2));
-
-        nameLabel = new JLabel("User Name:");
-        addressLabel = new JLabel("Address:");
-        phoneLabel = new JLabel("Phone Number:");
-        emailLabel = new JLabel("Email:");
-        ageLabel = new JLabel("Age:");
-
-        nameField = new JTextField();
-        addressField = new JTextField();
-        phoneField = new JTextField();
-        emailField = new JTextField();
-        ageField = new JTextField();
-
-        loginButton = new JButton("Login");
-        // ClientUI is a JFrame so parameter is this
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+panel.add(nameLabel);
+        panel.add(nameField);
+        panel.add(addressLabel);
+        panel.add(addressField);
+        panel.add(phoneLabel);
+        panel.add(phoneField);
+        panel.add(emailLabel);
+        panel.add(emailField);
+        panel.add(ageLabel);
+        panel.add(ageField);
+        panel.add(loginButton);
+        panel.add(viewOrderButton);
+        add(panel);
+// ClientUI is a JFrame so parameter is this
         loginButton.addActionListener(this);
-        viewOrderButton = new JButton("View Order");
         viewOrderButton.addActionListener(this);
-
-        // display text in GUI
-        // add is defined in Container (one of JFrame's super classes)
-        add(nameLabel);
-        add(nameField);
-        add(addressLabel);
-        add(addressField);
-        add(phoneLabel);
-        add(phoneField);
-        add(emailLabel);
-        add(emailField);
-        add(ageLabel);
-        add(ageField);
-        add(new JLabel()); // Placeholder to visually separate components
-        add(loginButton);
-        add(viewOrderButton);
-
         // makes JFrame visible on screen
         // defined in Component class
         setVisible(true);
@@ -80,14 +71,41 @@ public class ClientUI_M extends JFrame implements ActionListener{
     // because ClientUI implements the ActionListener interface,
     // it needs to provide an implementation for the actionPerformed(ActionEvent e) method
     public void actionPerformed(ActionEvent e) {
-        String name = nameField.getText();
-        if (clientBase.containsClient(name)) {
-            loggedIn(name);
-        } else {
-            // Implement the sign-up logic here
-            System.out.println("Sign up logic goes here.");
+        if(e.getSource() == loginButton){
+            String name = nameField.getText();
+            if (clientBase.containsClient(name)) {
+                loggedIn(name);
+            } 
+            else {
+                // sign-up
+                String address = addressField.getText();
+                String phone = phoneField.getText();
+                String email = emailField.getText();
+                // getting age as text first and then validating input
+                String ageText = ageField.getText();
+               // default value
+                int age = 0;
+                try{
+                    age = Integer.parseInt(ageText);
+                    if(age < 0 || age > 120){
+                        throw new IllegalArgumentException("Age is not in a valid range.");
+                    }
+                }
+                // multi-catch block
+                // NumberFormatException when string doesn't have appropriate format for num
+                catch (IllegalArgumentException ex){
+                    JOptionPane.showMessageDialog(this, "Invalid age input. Please enter a valid integer age.");
+                    // exit without signing up
+                    return;
+                }
+                if (clientBase.addClient(name, address, phone, email, age)){
+                    JOptionPane.showMessageDialog(this, "Sign-up successful!");
+                }
+                else{
+                    JOptionPane.showMessageDialog(this, "Sign up failed. Please try again.");
+                }
+            }
         }
-    }
 
     public void loggedIn(String username) {
         //creates panel for text to be displayed in
@@ -127,7 +145,13 @@ public class ClientUI_M extends JFrame implements ActionListener{
     }
 
     public void viewOrder(String username) {
-        // Implement viewOrder
+        // Prompt the user to enter the name of the produce to view the order
+        String produce = JOptionPane.showInputDialog("Available produce: \n" + inventory.toString() + "\nEnter the name of the produce you would like to view: ");
+        if (inventory.contains(produce)) {
+            JOptionPane.showMessageDialog(this, inventory.getProduce(produce).toString(), "View Order", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Sorry, that produce is not available.", "View Order", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void cancelOrder(String username) {
@@ -136,6 +160,7 @@ public class ClientUI_M extends JFrame implements ActionListener{
 
     public void changeInfo(String username) {
         // Implement changeInfo
+
     }
 
     public void viewInfo(String username) {
@@ -148,6 +173,7 @@ public class ClientUI_M extends JFrame implements ActionListener{
         // Implement the request order logic here
         System.out.println("Request order logic goes here.");
     }
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(ClientUI::new);
@@ -267,6 +293,9 @@ public class ClientUI_M extends JFrame implements ActionListener{
     //     } else {
     //         loggedIn(username);
     //     }
+    // }
+
+//}
     // }
 
 //}
