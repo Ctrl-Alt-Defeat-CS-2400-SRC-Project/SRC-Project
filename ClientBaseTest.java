@@ -6,11 +6,15 @@ class ClientBaseTest {
     private Inventory inventory;
 
     void setUp() {
-    	clientBase = new ClientBase();
-        inventory = new Inventory();
-        inventory.addProduce(new Produce("Apple", "Fruit"), 10);
-        inventory.addProduce(new Produce("Banana", "Fruit"), 10);
-        inventory.addProduce(new Produce("Carrot", "Vegetable"), 10);
+        try {
+            clientBase = new ClientBase();
+            inventory = new Inventory();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Inventory.addProduce(new Produce("Apple", "Fruit"), 10);
+        Inventory.addProduce(new Produce("Banana", "Fruit"), 10);
+        Inventory.addProduce(new Produce("Carrot", "Vegetable"), 10);
 
         clientBase.addClient("John", "123 Main St", "555-1234", "john@example.com", 35);
         clientBase.addClient("Jane", "456 Elm St", "555-5678", "jane@example.com", 28);
@@ -111,7 +115,7 @@ class ClientBaseTest {
     @Test
     void testCancelOrder() {
         assertTrue(clientBase.cancelOrder("John", "Apple", 2));
-        assertEquals(5, inventory.getQuantity(new Produce("Apple", "Fruit")));
+        assertEquals(5, Inventory.getCount("Apple"));
         assertFalse(clientBase.cancelOrder("John", "Apple", 4));
         assertEquals(3, clientBase.checkQuantity("John", "Apple"));
 
