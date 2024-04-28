@@ -74,6 +74,10 @@ public class FarmerUI {
         System.out.println(EXIT_MESSAGE);
     }
 
+    /**
+     * Manages the available inventory. Provides the menu of produce items, and allows the user 
+     * to add & remove produce. 
+     */
     private static void manageInventory() {
         boolean done = false;
         while (!done) {
@@ -146,6 +150,10 @@ public class FarmerUI {
         }
     }
 
+    /**
+     * Provides the menu of orders, and allows the user to add information about the client's specific 
+     * order. Also allows the user to update the status of orders (cancelled, done, etc.).
+     */
     private static void manageOrders() {
         boolean done = false;
         while (!done) {
@@ -234,6 +242,9 @@ public class FarmerUI {
         }
     }
 
+    /**
+     * Allows the user to keep track of the clients' names, addresses, numbers, emails, and ages. 
+     */
     public static void manageClients() {
         boolean done = false;
         while (!done) {
@@ -292,6 +303,11 @@ public class FarmerUI {
         }
     }
 
+    /**
+     * Prints the current orders (item names and quantity).
+     * 
+     * @param array The array representation of available produce. 
+     */
     private static void printOrders(Produce[] array) {
         Produce currentItem = new Produce("placeholder", "none");
         if(currentItem.equals(array[0])) {
