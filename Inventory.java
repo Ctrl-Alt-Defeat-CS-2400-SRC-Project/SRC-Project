@@ -12,6 +12,13 @@ public class Inventory {
     private static LinkedList<Produce> inventory = new LinkedList<Produce>();
     private static Path filePath = Paths.get("inventory.txt");
 
+    /**
+     * Utilizes a file scanner to gather information from the inventory text file. Breaks the 
+     * file into tokens that contain information about the available products, and adds 
+     * the data regarding the product name, count, and season to the inventory. 
+     * 
+     * @throws IOException Throws an exception if an error occured while reading the file. 
+     */
     public Inventory() throws IOException {
         if (Files.exists(filePath)) {
             Scanner fileScanner = new Scanner(filePath);
@@ -38,6 +45,7 @@ public class Inventory {
 
         } else {
             Files.createFile(filePath);
+            throw new IOException("An error occured while reading the file.");
         }
     }
 
@@ -148,6 +156,12 @@ public class Inventory {
         return false;
     }
 
+    /**
+     * Iterates through the inventory to find the desired produce item. 
+     * 
+     * @param produce The name of the produce in the form of a String. 
+     * @return The desired Produce object. Returns null if not found. 
+     */
     public static Produce getProduce(String produce) {
         Produce temp = null;
         for (int i = 1; i < inventory.getLength() + 1; i++) {
@@ -158,6 +172,12 @@ public class Inventory {
         return temp;
     }
 
+    /**
+     * Determines wether the desired produce item is found in the inventory. 
+     * 
+     * @param produce The name of the produce in the form of a String. 
+     * @return True if the produce item is found, and false otherwise. 
+     */
     public static boolean contains(String produce) {
         if(getProduce(produce) == null) {
             return false;
@@ -165,6 +185,12 @@ public class Inventory {
         return inventory.contains(getProduce(produce));
     }
 
+    /**
+     * Stores the contents of the inventory as a String. Contains information regarding the name of the product &
+     * how many items are in stock. 
+     * 
+     * @return The String representation of the inventory. 
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= inventory.getLength(); i++) {
@@ -174,6 +200,12 @@ public class Inventory {
         return sb.toString();
     }
 
+    /**
+     * Goes through all the Produce nodes in the inventory & prints the name, quantity, and seaosn
+     * in a new file. Allows information to be stored and reused. 
+     * 
+     * @throws IOException
+     */
     private void saveToFile() throws IOException {
 
         PrintWriter writer = new PrintWriter(filePath.toFile());
