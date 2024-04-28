@@ -204,7 +204,7 @@ public class Inventory {
      * Goes through all the Produce nodes in the inventory & prints the name, quantity, and seaosn
      * in a new file. Allows information to be stored and reused. 
      * 
-     * @throws IOException
+     * @throws IOException Throws an exception if there is n issue creating a new file. 
      */
     private void saveToFile() throws IOException {
 
