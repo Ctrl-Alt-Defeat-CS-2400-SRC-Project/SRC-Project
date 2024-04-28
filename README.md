@@ -18,7 +18,7 @@
 
 **Name**: Ryan Wei\
 **GitHub Username**: HoverfishOTS\
-**CPP Email**: rwei@cpp.edu
+**CPP Email**: rwei@cpp.edu\
 **Role**:
 - Created Client
 - Created ClientBase
