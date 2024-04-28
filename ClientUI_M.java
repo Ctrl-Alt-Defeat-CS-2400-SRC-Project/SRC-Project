@@ -78,9 +78,37 @@ public class ClientUI_M extends JFrame implements ActionListener{
         String name = nameField.getText();
         if (clientBase.containsClient(name)) {
             loggedIn(name);
-        } else {
-            // Implement the sign-up logic here
-            System.out.println("Sign up logic goes here.");
+        } 
+        else {
+            // sign-up
+            String address = addressField.getText();
+            String phone = phoneField.getText();
+            String email = emailField.getText();
+            // getting age as text first and then validating input
+            String ageText = ageField.getText();
+
+            // default value
+            int age = 0;
+            try{
+                age = Integer.parseInt(ageText);
+                if(age < 0 || age > 120){
+                    throw new IllegalArgumentException("Age is not in a valid range.");
+                }
+            }
+            // multi-catch block
+            // NumberFormatException when string doesn't have appropriate format for num
+            catch (IllegalArgumentException ex){
+                JOptionPane.showMessageDialog(this, "Invalid age input. Please enter a valid integer age.");
+                // exit without signing up
+                return;
+            }
+
+            if (clientBase.addClient(name, address, phone, email, age)){
+                JOptionPane.showMessageDialog(this, "Sign-up successful!");
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Sign up failed. Please try again.");
+            }
         }
     }
 
