@@ -113,7 +113,7 @@ public class ClientUI_M extends JFrame implements ActionListener{
         requestOrderButton.addActionListener(e -> requestOrder(username));
         panel.add(requestOrderButton);
 
-        //button for logging out need to fix this!!!
+        //button for logging out
         JButton logoutButton = new JButton("Log out");
         logoutButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
