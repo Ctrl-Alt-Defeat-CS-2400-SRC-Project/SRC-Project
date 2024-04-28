@@ -1,1 +1,2 @@
-Kale;10;fall
+Kale;10;fall;
+cab;5;spring;

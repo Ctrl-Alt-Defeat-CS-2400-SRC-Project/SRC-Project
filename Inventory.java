@@ -185,6 +185,10 @@ public class Inventory {
         return inventory.contains(getProduce(produce));
     }
 
+    public static int getCount(String produce) {
+        return inventory.getStock(inventory.getPosition(getProduce(produce)));
+    }
+
     /**
      * Stores the contents of the inventory as a String. Contains information regarding the name of the product &
      * how many items are in stock. 
@@ -206,7 +210,7 @@ public class Inventory {
      * 
      * @throws IOException Throws an exception if there is n issue creating a new file. 
      */
-    private void saveToFile() throws IOException {
+    private static void saveToFile() throws IOException {
 
         PrintWriter writer = new PrintWriter(filePath.toFile());
 
@@ -214,11 +218,11 @@ public class Inventory {
         for(int i = 1; i <= inventory.getCount(); i++) {
 
             // stores current produce in a var
-            Produce current = inventory.getNodeAt(i);
+            Produce current = inventory.getEntry(i);
 
             // prints name, quantity, and season
             writer.print(current.getName() + ";");
-            writer.print(current.getStock() + ";");
+            writer.print(getCount(current.getName()) + ";");
             writer.print(current.getSeason() + ";");
 
             writer.println();
