@@ -197,7 +197,7 @@ public class ClientBase {
         Iterator<Client> clientIterator = clientBase.getKeyIterator();
         while (clientIterator.hasNext()) {
             Client currentClient = clientIterator.next();
-            if (currentClient.getName().equals(userName)) {
+            if (currentClient.getName().equalsIgnoreCase(userName)) {
                 return currentClient;
             }
         }
