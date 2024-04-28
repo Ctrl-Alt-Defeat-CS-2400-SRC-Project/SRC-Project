@@ -12,7 +12,6 @@
 - Created Inventory
 - Created LinkedList
 - Created Node
-- Worked on file saving implementation
 - Worked on documentation of all methods 
 - Generated javadoc files
 
