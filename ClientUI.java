@@ -1,5 +1,4 @@
 import java.awt.GridLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
