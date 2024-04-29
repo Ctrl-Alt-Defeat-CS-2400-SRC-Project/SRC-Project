@@ -1,7 +1,12 @@
 import java.time.LocalDate;
 
+/**
+ * A class that represents a produce item.
+ * The produce item has a name, a season, and a boolean inSeason that's automatically checked by Java.
+ * 
+ * @author Ryan Wei
+ */
 public class Produce implements Comparable<Produce> {
-    // produce object
     private String name; // name of the produce
     private boolean inSeason; // whether the produce is in season or not
     private String season; // season the produce is in

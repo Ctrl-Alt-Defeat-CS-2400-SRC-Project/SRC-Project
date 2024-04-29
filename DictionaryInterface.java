@@ -1,8 +1,9 @@
 import java.util.Iterator;
 /**
- * An interface for a dictionary datatype
- * Search keys are unique in the dictionary
- * Search keys and associated values are not null
+ * An interface for a dictionary datatype. 
+ * Search keys are unique in the dictionary. 
+ * Search keys and associated values are not null. 
+ * 
  * @author Ryan Wei
  */
 public interface DictionaryInterface<K, V> {
