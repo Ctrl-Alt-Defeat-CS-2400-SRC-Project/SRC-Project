@@ -10,7 +10,7 @@ import javax.swing.JTextField;
  * A class that uses java swing to provide a user interface for the client.
  * The client will be able to sign in, change information, view stock, and request orders.
  * 
- * @author Medha Swarnachandrabalaji, Alex Auyon, Ryan Wei
+ * @author Medha Swarnachandrabalaji, Alex Auyon, Ryan Wei, Hasti Abbasi Kenarsari
  */
 public class ClientUI {
     private static ClientBase clientBase;
@@ -198,7 +198,15 @@ public class ClientUI {
             String email = emailField.getText();
             int age = Integer.parseInt(ageField.getText());
 
-            clientBase.addClient(username, address, phone, email, age);
+            try{
+                clientBase.addClient(username, address, phone, email, age);
+
+                JOptionPane.showMessageDialog(null, "Sign up successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error occured during sign up. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
         }
     }
 
