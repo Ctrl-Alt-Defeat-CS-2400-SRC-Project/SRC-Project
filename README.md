@@ -18,6 +18,7 @@ The farm’s existing inventory system, which relies on physical records and man
 - Created LinkedList
 - Created Node
 - Worked on ClientUI
+- Worked on JUnit testing
 - Generated javadoc files
 
 **Name**: Ryan Wei\
@@ -34,6 +35,7 @@ The farm’s existing inventory system, which relies on physical records and man
 - Created ClientUI
 - Worked on Inventory
 - Worked on LinkedList
+- Worked on JUnit testing
 
 **Name**: Kenzie Lam\
 **GitHub Username**: eknzie\
