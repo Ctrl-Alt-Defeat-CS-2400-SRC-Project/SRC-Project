@@ -147,7 +147,8 @@ public class ClientUI {
     private static void signUp() {
         
         JPanel signUpPanel = new JPanel();
-        signUpPanel.setLayout(new GridLayout(4, 1));
+        signUpPanel.setLayout(new GridLayout(6, 2));
+        signUpPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         signUpPanel.add(new JLabel("Username: "));
         JTextField nameField = new JTextField(20);
