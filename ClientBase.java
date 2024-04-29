@@ -78,6 +78,34 @@ public class ClientBase {
         return success;
     }
 
+    public boolean changeClientInfo(String userName, String address, String phone, String email, int age) {
+        boolean success = false;
+        Client client = getClient(userName);
+        if (client == null) {
+            System.out.println("Client not found\n");
+            return success;
+        }
+        if (address != null) {
+            client.setAddress(address);
+        }
+        if (phone != null) {
+            client.setPhone(phone);
+        }
+        if (email != null) {
+            client.setEmail(email);
+        }
+        if (age >= 0) {
+            client.setAge(age);
+        }
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            System.out.println("Error saving to file");
+        }
+        success = true;
+        return success;
+    }
+
     private boolean addProduce(String userName, String produce, String season) {
         boolean success = false;
         Client client = getClient(userName);
