@@ -60,10 +60,6 @@ public class ClientUI {
             info();
         } else if(ans == JOptionPane.NO_OPTION) {
             orders();
-        } else if(ans == JOptionPane.CANCEL_OPTION) {
-            requestOrder();
-        } else {
-            logIn();
         }
     }
 
@@ -141,13 +137,17 @@ public class ClientUI {
     }
 
     private static void orders() {
-        int ans = JOptionPane.showOptionDialog(null, "What would you like to do?", "Options", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"View Stock", "View orders", "Request order", "Back"}, null);
+        int ans = JOptionPane.showOptionDialog(null, "What would you like to do?", "Options", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"View Stock", "View orders", "Request order", "Cancel order", "Back"}, null);
         if(ans == JOptionPane.YES_OPTION) {
             viewStock();
         } else if(ans == JOptionPane.NO_OPTION) {
             viewOrders();
         } else if(ans == 2) {
             requestOrder();
+            orders();
+        } else if(ans == 3) {
+            cancelOrder();
+            orders();
         } else {
             loggedIn();
         }
@@ -160,11 +160,85 @@ public class ClientUI {
     }
 
     private static void viewOrders() {
-        //StUB
+        JOptionPane.showMessageDialog(null, username + "'s orders: \n" + ordersToString(clientBase.getOrders(username)), "Orders", JOptionPane.INFORMATION_MESSAGE);
+        orders();
     }
 
-    private static void requestOrder() {
-        //StUB
+    private static boolean requestOrder() {
+        boolean requestDone = false;
+        int quantityInt = -1;
+
+        String produceName = JOptionPane.showInputDialog(null, "Enter the produce you would like to order: ");
+        if(produceName == null) {
+            JOptionPane.showMessageDialog(null, "Order cancelled. Returning to main menu.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            return requestDone;
+        } else if (Inventory.contains(produceName) && !produceName.equals("")) {
+            String quantity = JOptionPane.showInputDialog(null, "Enter the quantity of " + produceName + " you would like to order: ");
+            if (quantity == null) {
+                JOptionPane.showMessageDialog(null, "Order cancelled. Returning to main menu.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                return requestDone;
+            } else {
+                try {
+                    quantityInt = Integer.parseInt(quantity);
+                    if(quantityInt < 0) {
+                        JOptionPane.showMessageDialog(null, "Invalid value. Returning to main menu.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        return requestDone;
+                    } else {
+                        if(Inventory.inStock(produceName, quantityInt)) {
+                            clientBase.addProduce(username, produceName, quantityInt);
+                            JOptionPane.showMessageDialog(null, "Order successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            return requestDone = true;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Order failed. Not enough produce in stock.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return requestDone;
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return requestDone;
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Produce not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            return requestDone;
+        }
+    }
+
+    private static boolean cancelOrder() {
+        boolean cancelDone = false;
+        String produceName = JOptionPane.showInputDialog(null, "Enter the produce you would like to cancel: ");
+        if(produceName == null) {
+            JOptionPane.showMessageDialog(null, "Order cancellation cancelled. Returning to main menu.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            return cancelDone;
+        } else if (Inventory.contains(produceName) && !produceName.equals("")) {
+            String quantity = JOptionPane.showInputDialog(null, "Enter the quantity of " + produceName + " you would like to cancel: ");
+            if (quantity == null) {
+                JOptionPane.showMessageDialog(null, "Order cancellation cancelled. Returning to main menu.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                return cancelDone;
+            } else {
+                try {
+                    int quantityInt = Integer.parseInt(quantity);
+                    if(quantityInt < 0) {
+                        JOptionPane.showMessageDialog(null, "Invalid value. Returning to main menu.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                        return cancelDone;
+                    } else {
+                        if(clientBase.cancelOrder(username, produceName, quantityInt)) {
+                            JOptionPane.showMessageDialog(null, "Order cancellation successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            return cancelDone = true;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Order cancellation failed. Not enough produce in stock.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return cancelDone;
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return cancelDone;
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Produce not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            return cancelDone;
+        }
     }
 
     private static void signUp() {
@@ -216,6 +290,29 @@ public class ClientUI {
 
     private static String displayChange(String unchanged, String changed) {
         return unchanged + " -> " + changed;
+    }
+
+    private static String ordersToString(Produce[] array) {
+        StringBuilder sb = new StringBuilder();
+        Produce currentItem = new Produce("placeholder", "none");
+        if(currentItem.equals(array[0])) {
+            sb.append("No orders found");
+        } else {
+            Produce previousItem = null;
+            int count = 1;
+            for (int i = 0; i < array.length; i++) {
+                currentItem = array[i];
+                if (previousItem != null && currentItem.equals(previousItem)) {
+                    count++;
+                } else if (previousItem != null) {
+                    sb.append("   " + previousItem.getName() + " x" + count + "\n");
+                    count = 1;
+                }
+                previousItem = array[i];
+            }
+            sb.append("   " + previousItem.getName() + " x" + count + "\n");
+        }
+        return sb.toString();
     }
   
 }
