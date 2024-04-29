@@ -146,10 +146,10 @@ public class ClientUI {
 
             clientBase.addClient(this.username, this.address, this.phone, this.email, this.age);
         }
-
     }
 
     private static String displayChange(String unchanged, String changed) {
         return unchanged + " -> " + changed;
     }
+  
 }
