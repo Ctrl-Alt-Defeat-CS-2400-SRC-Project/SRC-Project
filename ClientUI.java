@@ -241,7 +241,7 @@ public class ClientUI {
         }
     }
 
-    private static void signUp() {
+    private static boolean signUp() {
         
         JPanel signUpPanel = new JPanel();
         signUpPanel.setLayout(new GridLayout(6, 2));
@@ -274,7 +274,13 @@ public class ClientUI {
             String address = addressField.getText();
             String phone = phoneField.getText();
             String email = emailField.getText();
-            int age = Integer.parseInt(ageField.getText());
+            int age = -1;
+            try {
+                age = Integer.parseInt(ageField.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid age.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
 
             if (username.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please enter a username.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -285,16 +291,17 @@ public class ClientUI {
                 JOptionPane.showMessageDialog(null, "Please provide either a phone number or an email address.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            try{
+            try {
                 clientBase.addClient(username, address, phone, email, age);
 
                 JOptionPane.showMessageDialog(null, "Sign up successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                
+                return true;
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error occured during sign up. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
             }
-            
         }
+        return false;
     }
 
     private static String displayChange(String unchanged, String changed) {
