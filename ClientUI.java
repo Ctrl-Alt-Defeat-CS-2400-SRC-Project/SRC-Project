@@ -1,5 +1,6 @@
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,23 +32,26 @@ public class ClientUI {
             if (ans == JOptionPane.YES_OPTION) {
                 signUp();
             } else if (ans == JOptionPane.NO_OPTION) {
-                logIn();
-                done = true;
+                done = logIn();
             } else {
-                JOptionPane.showMessageDialog(null, "Error, Please try again.");
+                done = true;
             }
         }
         JOptionPane.showMessageDialog(null, "Thank you for using our services. Have a great day!");
     }
 
-    private static void logIn() {
+    private static boolean logIn() {
         username = JOptionPane.showInputDialog("Enter your username: ");
         if(clientBase.containsClient(username)) {
             loggedIn();
+            return false;
+        } else if(username == null) {
+            return false;
         } else {
             JOptionPane.showMessageDialog(null, "Username not found. Please try again.");
             logIn();
         }
+        return true;
     }
 
     private static void loggedIn() {
