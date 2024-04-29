@@ -140,11 +140,46 @@ public class ClientUI {
     }
 
     private static void signUp() {
-        //STUB
+        
+        JPanel signUpPanel = new JPanel();
+        signUpPanel.setLayout(new GridLayout(4, 1));
+
+        signUpPanel.add(new JLabel("Username: "));
+        JTextField nameField = new JTextField(20);
+        signUpPanel.add(nameField);
+
+        signUpPanel.add(new JLabel("Email: "));
+        JTextField emailField = new JTextField(20);
+        signUpPanel.add(emailField);
+
+        signUpPanel.add(new JLabel("Phone Number: "));
+        JTextField phoneField = new JTextField(20);
+        signUpPanel.add(phoneField);
+
+        signUpPanel.add(new JLabel("Address: "));
+        JTextField addressField = new JTextField(20);
+        signUpPanel.add(addressField);
+
+        signUpPanel.add(new JLabel("Age: "));
+        JTextField ageField = new JTextField(20);
+        signUpPanel.add(ageField);
+
+        int option = JOptionPane.showConfirmDialog(null, signUpPanel, "Sign Up", JOptionPane.OK_CANCEL_OPTION);
+
+        if(option == JOptionPane.OK_OPTION) {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            String address = addressField.getText();
+            String phone = phoneField.getText();
+            String email = emailField.getText();
+            int age = Integer.parseInt(ageField.getText());
+
+            clientBase.addClient(this.username, this.address, this.phone, this.email, this.age);
+        }
     }
 
     private static String displayChange(String unchanged, String changed) {
         return unchanged + " -> " + changed;
     }
+  
 }
-
