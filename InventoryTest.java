@@ -6,6 +6,7 @@ public class InventoryTest {
     
     @Test
     public void testInventoryAdd() {
+        @SuppressWarnings("unused")
         Inventory inventory;
         try{
             inventory = new Inventory();
@@ -20,6 +21,7 @@ public class InventoryTest {
 
     @Test
     public void testInventoryRemove() {
+        @suppressWarnings("unused");
         Inventory inventory;
         try{
             inventory = new Inventory();
@@ -34,6 +36,7 @@ public class InventoryTest {
 
     @Test
     public void testInventoryGetProduce() {
+        @SuppressWarnings("unused");
         Inventory inventory;
         try{
             inventory = new Inventory();
@@ -61,6 +64,7 @@ public class InventoryTest {
 
     @Test
     public void testInventoryInStock() {
+        @surpressWarnings("unused");
         Inventory inventory;
         try{
             inventory = new Inventory();

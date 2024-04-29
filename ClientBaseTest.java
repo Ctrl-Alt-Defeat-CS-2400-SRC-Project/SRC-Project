@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 class ClientBaseTest {
     private ClientBase clientBase;
+    @SuppressWarnings("unused")
     private Inventory inventory;
 
     void setUp() {
