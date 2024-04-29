@@ -79,22 +79,52 @@ public class ClientUI {
     private static void changeInfo() {
         int ans = JOptionPane.showOptionDialog(null, "What would you like to change?", "Options", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Address", "Phone number", "Email", "Age", "Back"}, null);
         if(ans == JOptionPane.YES_OPTION) {
+            String oldAddress = clientBase.getClient(username).getAddress();
+            if(oldAddress.equals("")) {
+                oldAddress = "No address on file.";
+            }
             String address = JOptionPane.showInputDialog("Enter your new address: ");
-            clientBase.getClient(username).setAddress(address);
+            clientBase.changeClientInfo(username, address, null, null, -1);
+            JOptionPane.showMessageDialog(null, "Information updated.\n" + displayChange(oldAddress, address));
             changeInfo();
         } else if(ans == JOptionPane.NO_OPTION) {
+            String oldPhone = clientBase.getClient(username).getPhone();
+            if(oldPhone.equals("")) {
+                oldPhone = "No phone number on file.";
+            }
             String phone = JOptionPane.showInputDialog("Enter your new phone number: ");
-            clientBase.getClient(username).setPhone(phone);
+            clientBase.changeClientInfo(username, null, phone, null, -1);
+            JOptionPane.showMessageDialog(null, "Information updated.\n" + displayChange(oldPhone, phone));
             changeInfo();
         } else if(ans == JOptionPane.CANCEL_OPTION) {
+            String oldEmail = clientBase.getClient(username).getEmail();
+            if(oldEmail.equals("")) {
+                oldEmail = "No email on file.";
+            }
             String email = JOptionPane.showInputDialog("Enter your new email: ");
-            clientBase.getClient(username).setEmail(email);
+            clientBase.changeClientInfo(username, null, null, email, -1);
+            JOptionPane.showMessageDialog(null, "Information updated.\n" + displayChange(oldEmail, email));
             changeInfo();
         } else if(ans == 3) {
-            int oldAge = clientBase.getClient(username).getAge();
-            int age = Integer.parseInt(JOptionPane.showInputDialog("Enter your new age: "));
-            clientBase.getClient(username).setAge(age);
-            JOptionPane.showMessageDialog(null, "Information updated." + displayChange(parseInt(oldAge), age));
+            boolean ageDone = false;
+            while(!ageDone) {
+                int oldAge = clientBase.getClient(username).getAge();
+                int age = -1;
+                try {
+                    age = Integer.parseInt(JOptionPane.showInputDialog("Enter your new age: "));
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Invalid age. Please try again.");
+                    break;
+                }
+                if (age < 120 && age > 0) {
+                    clientBase.changeClientInfo(username, null, null, null, age);
+                    JOptionPane.showMessageDialog(null, "Information updated.\n" + displayChange(String.valueOf(oldAge), String.valueOf(age)));
+                    ageDone = true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid age. Please try again.");
+                    break;
+                }
+            }
             changeInfo();
         } else {
             info();
