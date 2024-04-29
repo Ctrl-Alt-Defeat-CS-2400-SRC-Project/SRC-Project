@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InventoryTest {
     
     @Test
+    @SuppressWarnings("unused")
     public void testInventoryAdd() {
-        @SuppressWarnings("unused")
         Inventory inventory;
         try{
             inventory = new Inventory();
@@ -20,8 +20,8 @@ public class InventoryTest {
     }
 
     @Test
+    @SuppressWarnings("unused")
     public void testInventoryRemove() {
-        @suppressWarnings("unused");
         Inventory inventory;
         try{
             inventory = new Inventory();
@@ -35,8 +35,8 @@ public class InventoryTest {
     }
 
     @Test
+    @SuppressWarnings("unused")
     public void testInventoryGetProduce() {
-        @SuppressWarnings("unused");
         Inventory inventory;
         try{
             inventory = new Inventory();
@@ -63,8 +63,8 @@ public class InventoryTest {
     }
 
     @Test
+    @SuppressWarnings("unused")
     public void testInventoryInStock() {
-        @surpressWarnings("unused");
         Inventory inventory;
         try{
             inventory = new Inventory();
