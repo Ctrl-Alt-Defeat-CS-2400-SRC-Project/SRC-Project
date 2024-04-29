@@ -2,6 +2,11 @@
 
 ### Group Name: Ctrl-Alt-Defeat
 
+### Project Description 
+We have worked ardously to create a client-inventory system that adheres to the needs of the consumer and the wide variety of produce that Lopez Urban Farm provides. A user-friendly platform has been developed to allow the consumer to view the produce at the farm and make orders efficiently. Similarly, workers at the farm are able to maintain a grasp of their clients and pending orders. 
+
+The farm’s existing inventory system, which relies on physical records and manual updates on a whiteboard, requires much of an overhaul. To efficiently manage the farm’s clientele and their service requirements, we utilized a culmination of the **dictionary** and **list** data structures. The dictionary allows for quick client lookups, with the client’s name as the key and their required services as the value. The list makes it possible to keep track of inventory, allowing for easy adding and removal of entries. An elegant GUI is also available, making our project extremely user-friendly. Various testing and validation processes (JUnit 5 testing framework) have been implemented in order to ensure that the project deliverables are up to standard.
+
 ### Group Members
 **Name**: Hasti Abbasi Kenarsari\
 **GitHub Username**: hastiabbasi\
