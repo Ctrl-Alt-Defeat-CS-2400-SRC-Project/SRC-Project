@@ -199,7 +199,10 @@ public class Inventory {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= inventory.getLength(); i++) {
             Produce produce = inventory.getEntry(i);
-            sb.append(produce.getName()).append(": ").append(inventory.getStock(i)).append("\n");
+            String season = "Out of Season";
+            if (produce.getInSeason() == true)
+                season = "In Season";
+            sb.append(produce.getName()).append(": \n   Count: ").append(inventory.getStock(i)).append("\n   Status: ").append(season).append("\n");
         }
         return sb.toString();
     }
