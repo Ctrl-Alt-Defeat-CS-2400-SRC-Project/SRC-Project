@@ -137,7 +137,26 @@ public class ClientUI {
     }
 
     private static void orders() {
-        //STUB
+        int ans = JOptionPane.showOptionDialog(null, "What would you like to do?", "Options", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"View Stock", "View orders", "Request order", "Back"}, null);
+        if(ans == JOptionPane.YES_OPTION) {
+            viewStock();
+        } else if(ans == JOptionPane.NO_OPTION) {
+            viewOrders();
+        } else if(ans == 2) {
+            requestOrder();
+        } else {
+            loggedIn();
+        }
+    }
+
+    private static void viewStock() {
+        String stock = inventory.toString();
+        JOptionPane.showMessageDialog(null, stock, "Stock", JOptionPane.INFORMATION_MESSAGE);
+        orders();
+    }
+
+    private static void viewOrders() {
+        //StUB
     }
 
     private static void requestOrder() {
