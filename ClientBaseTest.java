@@ -1,5 +1,3 @@
-// rewrote ClientBaseTest 
-
 /**
    A class that serves a Unit Test using JUnit 5 to test the ClientBase class
    @author Medha Swarnachandrabalaji, Kenzie Lam
