@@ -125,11 +125,26 @@ public class ClientBase {
             }
             success = true;
         } else {
-            Produce[] newOrders = new Produce[orders.length + 1];
-            for (int i = 0; i < orders.length; i++) {
-                newOrders[i] = orders[i];
+            int lastIndex = -2;
+            for (int i = 0; i < orders.length; i++)
+                if (orders[i].getName().equalsIgnoreCase(produce))
+                    lastIndex = i;
+            if(lastIndex == orders.length - 1) {
+                lastIndex = -2;
             }
-            newOrders[orders.length] = new Produce(produce, season);
+
+            Produce[] newOrders = new Produce[orders.length + 1];
+            int j = 0;
+            for (int i = 0; i < orders.length; i++) {
+                if (i == lastIndex + 1) {
+                    newOrders[j] = new Produce(produce, season);
+                    j++;
+                }
+                newOrders[j] = orders[i];
+                j++;
+            }
+            if (lastIndex == -2)
+                newOrders[orders.length] = new Produce(produce, season);
             clientBase.add(client, newOrders);
             try {
                 saveToFile();
@@ -174,12 +189,29 @@ public class ClientBase {
             }
             success = true;
         } else {
-            Produce[] newOrders = new Produce[orders.length + quantity];
-            for (int i = 0; i < orders.length; i++) {
-                newOrders[i] = orders[i];
+            int lastIndex = -2;
+            for (int i = 0; i < orders.length; i++)
+                if (orders[i].getName().equalsIgnoreCase(produce))
+                    lastIndex = i;
+            if(lastIndex == orders.length - 1) {
+                lastIndex = -2;
             }
-            for (int i = orders.length; i < newOrders.length; i++)
-                newOrders[i] = Inventory.removeProduce(produce, 1); // need to be added to Inventory
+
+            Produce[] newOrders = new Produce[orders.length + quantity];
+            int j = 0;
+            for (int i = 0; i < orders.length; i++) {
+                if (i == lastIndex + 1) {
+                    for (int k = 0; k < quantity; k++) {
+                        newOrders[j] = Inventory.removeProduce(produce, 1);
+                        j++;
+                    }
+                }
+                newOrders[j] = orders[i];
+                j++;
+            }
+            if (lastIndex == -2)
+                for (int i = orders.length; i < newOrders.length; i++)
+                    newOrders[i] = Inventory.removeProduce(produce, 1);
             clientBase.add(client, newOrders);
             try {
                 saveToFile();
@@ -208,7 +240,7 @@ public class ClientBase {
             return null;
         }
         for (int i = 0; i < orders.length; i++) {
-            if (orders[i].getName().equals(produceName)) {
+            if (orders[i].getName().equalsIgnoreCase(produceName)) {
                 return orders[i];
             }
         }
@@ -361,10 +393,8 @@ public class ClientBase {
      * @return true if the order was cancelled successfully, false otherwise
      */
     public boolean cancelOrder(String userName, String produceName, int quantity) {
+        Inventory.addProduce(getProduce(userName, produceName), quantity);
         boolean cancelled = removeOrder(userName, produceName, quantity);
-        if (cancelled) {
-            Inventory.addProduce(getProduce(userName, produceName), quantity);
-        }
         return cancelled;
     }
 
