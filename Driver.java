@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 /**
- * a main class to demo code
+ * A main class to demo code. 
  * 
  * @author Ryan Wei
  */
