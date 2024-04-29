@@ -12,6 +12,7 @@
 - Created Inventory
 - Created LinkedList
 - Created Node
+- Worked on ClientUI
 - Generated javadoc files
 
 **Name**: Ryan Wei\
@@ -24,22 +25,26 @@
 - Created Farmer
 - Created Produce
 - Created SortedLinkedDictionary
+- Worked on ClientUI
 
 **Name**: Kenzie Lam\
 **GitHub Username**: eknzie\
 **CPP Email**: waichinglam@cpp.edu\
 **Role**
+- Worked on JUnit testing
 
 **Name**: Medha Swarnachandrabalaji\
 **GitHub Username**: MedhaS1\
 **CPP Email**: medhas@cpp.edu\
 **Role**
+- Worked on Client UI
+- Worked on JUnit testing
 
 **Name**: Alex Auyon\
 **GitHub Username**: AlexaaAPCS\
-**CPP Email**: 
+**CPP Email**: aauyon@cpp.edu\
 **Role**
-
+- Worked on ClientUI
   
 ### Extra Features
 GUI
