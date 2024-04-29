@@ -357,7 +357,7 @@ public class ClientBase {
         }
 
         for (int i = 0; i < orders.length; i++) {
-            if (orders[i].getName().equalsIgnoreCase(produce) && count < quantity) {
+            if (orders[i].getName().equalsIgnoreCase(produce) && count <= quantity) {
                 Produce[] newOrders = new Produce[orders.length - 1];
                 for (int j = 0; j < i; j++) {
                     newOrders[j] = orders[j];

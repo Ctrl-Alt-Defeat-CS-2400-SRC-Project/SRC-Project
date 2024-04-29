@@ -245,7 +245,7 @@ public class FarmerUI {
     /**
      * Allows the user to keep track of the clients' names, addresses, numbers, emails, and ages. 
      */
-    public static void manageClients() {
+    private static void manageClients() {
         boolean done = false;
         while (!done) {
             System.out.println(CLIENTS_MENU);
