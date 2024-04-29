@@ -19,13 +19,16 @@
 **GitHub Username**: HoverfishOTS\
 **CPP Email**: rwei@cpp.edu\
 **Role**:
+- Outlined project specifications
 - Created Client
 - Created ClientBase
 - Created DictionaryInterface
-- Created Farmer
+- Created FarmerUI
 - Created Produce
 - Created SortedLinkedDictionary
-- Worked on ClientUI
+- Created ClientUI
+- Worked on Inventory
+- Worked on LinkedList
 
 **Name**: Kenzie Lam\
 **GitHub Username**: eknzie\
