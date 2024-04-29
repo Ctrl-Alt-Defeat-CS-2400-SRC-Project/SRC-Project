@@ -202,6 +202,15 @@ public class ClientUI {
             String email = emailField.getText();
             int age = Integer.parseInt(ageField.getText());
 
+            if (username.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter a username.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            // makes sure either the phone number or email are inputted
+            if (phone.isEmpty() && email.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please provide either a phone number or an email address.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             try{
                 clientBase.addClient(username, address, phone, email, age);
 
