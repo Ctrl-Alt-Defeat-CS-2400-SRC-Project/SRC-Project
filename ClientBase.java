@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.nio.file.*;
 import java.io.*;
 import java.util.Scanner;
-import java.util.*;
 
 /**
  * Uses the sorted linked dictionary to create and maintain a list of clients and their orders. 
