@@ -1,5 +1,10 @@
+import java.awt.GridLayout;
+
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * A class that uses java swing to provide a user interface for the client.
@@ -167,14 +172,13 @@ public class ClientUI {
         int option = JOptionPane.showConfirmDialog(null, signUpPanel, "Sign Up", JOptionPane.OK_CANCEL_OPTION);
 
         if(option == JOptionPane.OK_OPTION) {
-            String username = usernameField.getText();
-            String password = new String(passwordField.getPassword());
+            String username = nameField.getText();
             String address = addressField.getText();
             String phone = phoneField.getText();
             String email = emailField.getText();
             int age = Integer.parseInt(ageField.getText());
 
-            clientBase.addClient(this.username, this.address, this.phone, this.email, this.age);
+            clientBase.addClient(username, address, phone, email, age);
         }
     }
 
