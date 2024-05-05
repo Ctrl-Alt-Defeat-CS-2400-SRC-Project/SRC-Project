@@ -22,27 +22,20 @@ public class Inventory {
     public Inventory() throws IOException {
         if (Files.exists(filePath)) {
             Scanner fileScanner = new Scanner(filePath);
-
             while (fileScanner.hasNextLine()) {
-
                 String line = fileScanner.nextLine();
                 if (line.isEmpty()) {
                     continue; 
                 }
-
                 String[] tokens = line.split(";");
-               
                 for (int i = 0; i < tokens.length; i += 3) {
                     String produceName = tokens[i];
                     int count = Integer.parseInt(tokens[i + 1]);
                     String season = tokens[i + 2];
                     addProduce(new Produce(produceName, season), count);
                 }
-
             }
-
             fileScanner.close();
-
         } else {
             Files.createFile(filePath);
             throw new IOException("An error occured while reading the file.");
@@ -214,26 +207,18 @@ public class Inventory {
      * @throws IOException Throws an exception if there is n issue creating a new file. 
      */
     private static void saveToFile() throws IOException {
-
         PrintWriter writer = new PrintWriter(filePath.toFile());
-
         // goes through all Produce nodes in inventory
         for(int i = 1; i <= inventory.getCount(); i++) {
-
             // stores current produce in a var
             Produce current = inventory.getEntry(i);
-
             // prints name, quantity, and season
             writer.print(current.getName() + ";");
             writer.print(getCount(current.getName()) + ";");
             writer.print(current.getSeason() + ";");
-
             writer.println();
-
         }
-
         writer.close();
-
     }
 
 }
