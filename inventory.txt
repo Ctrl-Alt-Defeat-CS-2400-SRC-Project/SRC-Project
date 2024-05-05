@@ -1,0 +1,3 @@
+Apple;3;fall;
+Orange;3;winter;
+Peach;3;summer;

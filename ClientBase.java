@@ -20,7 +20,6 @@ public class ClientBase {
     public ClientBase() throws IOException {
         if (Files.exists(filePath)) {
             Scanner fileScanner = new Scanner(filePath);
-
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 if (line.isEmpty()) {
@@ -357,7 +356,7 @@ public class ClientBase {
         }
 
         for (int i = 0; i < orders.length; i++) {
-            if (orders[i].getName().equalsIgnoreCase(produce) && count <= quantity) {
+            if (orders[i].getName().equalsIgnoreCase(produce) && count < quantity) {
                 Produce[] newOrders = new Produce[orders.length - 1];
                 for (int j = 0; j < i; j++) {
                     newOrders[j] = orders[j];
@@ -371,6 +370,11 @@ public class ClientBase {
                 i--;
                 count++;
             }
+        }
+        if(clientBase.getValue(client).length == 0) {
+            Produce[] newOrders = new Produce[1];
+            newOrders[0] = new Produce("placeholder", "none");
+            clientBase.add(client, newOrders);
         }
         if(!removed)
             System.out.println("Order not found\n");

@@ -1,0 +1,5 @@
+Bob;123 street Pomona CA;;bob@aol.com;60;placeholder;none;
+Jill;;;jill@gmail.com;25;Orange;winter;
+John;Helldiver;;freedom@democracy.com;20;placeholder;none;
+Ryan;;;rwei@cpp.edu;20;Orange;winter;Orange;winter;Apple;fall;
+jack;;;;20;placeholder;none;
